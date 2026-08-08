@@ -8,7 +8,17 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    body { font-family: 'PingFang TC', 'Noto Sans TC', sans-serif; overflow: hidden; margin: 0; padding: 0; background-color: #000; }
+    body { 
+      font-family: 'PingFang TC', 'Noto Sans TC', sans-serif; 
+      overflow: hidden; 
+      margin: 0; 
+      padding: 0; 
+      background-color: #000; 
+      /* 防止手機長按選取圖片或觸發右鍵選單 */
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
     
     @media screen and (orientation: portrait) {
       #portrait-warning { display: flex; }
@@ -17,18 +27,29 @@
       #portrait-warning { display: none; }
     }
     
-    /* 針對去背圖片專用的互動特效 */
+    /* 針對去背圖片專用的互動特效 - 確保 Hitbox 完美貼合 */
     .hotspot-img {
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       /* 預設給予一點點陰影，讓去背圖稍微浮出底圖 */
       filter: drop-shadow(0 4px 4px rgba(0,0,0,0.4));
       cursor: pointer;
+      /* 設定變形原點在底部中央，放大時腳跟會穩固在原地 */
+      transform-origin: bottom center; 
     }
     .hotspot-img:active, .hotspot-img:hover {
-      /* 僅原地放大 15% (移除 translateY)，加上強烈的金色光暈 */
+      /* 原地放大 15%，加上強烈的金色光暈 */
       transform: scale(1.15);
       filter: drop-shadow(0 8px 15px rgba(250, 204, 21, 0.8));
       z-index: 50;
+    }
+
+    /* 對話框自訂滾動條 */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(250, 204, 21, 0.5);
+      border-radius: 4px;
     }
   </style>
 </head>
@@ -38,91 +59,90 @@
   <!-- 1. 將外層設為 flex 置中 -->
   <div id="scene-2d" class="fixed inset-0 w-full h-full bg-black flex items-center justify-center">
     
-    <!-- 2. 核心畫布容器：鎖定 16:9 比例 (aspect-video)，最大寬度不超過螢幕高度的 16/9 (177.78vh) -->
-    <!-- 這樣能保證不論螢幕多大、多寬，畫布比例永遠固定，內部的 % 定位絕對不會跑位 -->
-    <div class="relative w-full aspect-video max-w-[177.78vh] max-h-[100vh] overflow-hidden">
+    <!-- 2. 核心畫布容器：鎖定 16:9 比例 (aspect-video) -->
+    <!-- 加上 mx-auto 確保在超寬螢幕下水平置中 -->
+    <div class="relative w-full aspect-video max-w-[177.78vh] max-h-[100vh] mx-auto overflow-hidden">
       
-      <!-- 【替換點 1】 2D 底圖 (因為外層比例已固定，這裡改用 object-cover 填滿畫布) -->
-      <img src="https://juan-di-cake.github.io/Jesus_web/assets/wedding/back.png" alt="迦拿婚宴背景" class="w-full h-full object-cover opacity-95">
+      <!-- 2D 底圖 (還原為 back.png) -->
+      <img src="https://juan-di-cake.github.io/Jesus_web/assets/wedding/back.png" alt="迦拿婚宴背景" class="w-full h-full object-cover opacity-95 pointer-events-none">
       
-      <!-- ================= 核心人物角色去背圖 (觸發 RPG 對話與 MP4) ================= -->
-      
-      <!-- 1. 新娘去背圖 -->
-      <!-- 【替換點 2】 直接使用 img 並加上 draggable="false" 避免拖曳干擾點擊 -->
-      <!-- 大小已改為百分比 w-[8%] h-[30%]，讓大小跟隨背景自動縮放 -->
-      <img src="https://juan-di-cake.github.io/Jesus_web/assets/wedding/brid.png" alt="新娘" draggable="false"
+      <!-- ================= 核心人物角色去背圖 ================= -->
+      <!-- 依照 back_2.jpg 的排版調整位置與大小 -->
+
+      <!-- 1. 新娘去背圖 (左側最邊緣) -->
+      <img src="https://juan-di-cake.github.io/Jesus_web/assets/wedding/bride.png" alt="新娘" draggable="false"
            onclick="showDialog('👰 新娘 (Bride)', '辦一場婚禮真的很辛苦呢！我們不只要連續慶祝七天，還要邀請全村的人一起來參加喜宴。為了今天，我穿上了這件精心準備的禮服，上面有最高級的『金鑲繡花』。雖然戴著厚重的頭紗和頸飾有點重，但這是我一生中最榮耀、最美麗的時刻！', 'bride.mp4')" 
-           class="hotspot-img absolute top-[35%] left-[6%] w-[8%] h-[30%] object-contain">
+           class="hotspot-img absolute top-[28%] left-[5%] w-[13%] h-auto object-contain">
       
-      <!-- 2. 新郎去背圖 -->
+      <!-- 2. 新郎去背圖 (新娘右方偏上) -->
       <img src="https://juan-di-cake.github.io/Jesus_web/assets/wedding/Groom.png" alt="新郎" draggable="false"
            onclick="showDialog('🤵 新郎 (Groom)', '感謝村裡的爸爸媽媽們這幾天來幫忙籌備喜宴。你們看我外袍上披著的這件『祈禱巾 (Tallit)』，邊緣還綁著特別的『繸子』。這是為了提醒我們，即使在歡慶的時刻，也不要忘記我們是上帝的子民，要時刻把祂的律法與恩典記在心裡。', 'groom.mp4')" 
-           class="hotspot-img absolute top-[25%] left-[19%] w-[10%] h-[35%] object-contain">
+           class="hotspot-img absolute top-[22%] left-[17%] w-[11%] h-auto object-contain">
 
-      <!-- 3. 賓客去背圖 -->
+      <!-- 3. 賓客去背圖 (新郎右下方) -->
       <img src="https://juan-di-cake.github.io/Jesus_web/assets/wedding/Guest.png" alt="賓客" draggable="false"
            onclick="showDialog('🧔 賓客 (Guest)', '這場婚宴太棒了！我們脫下皮革涼鞋，斜躺在這種『ㄇ字型 (Tri-clinium)』的座席上，真的是非常放鬆舒服。能這樣和親朋好友們一起吃喝快樂，慶祝這對新人的結合，真是太有福了！', 'guest.mp4')" 
-           class="hotspot-img absolute top-[65%] left-[23%] w-[8%] h-[30%] object-contain">
+           class="hotspot-img absolute top-[43%] left-[26%] w-[11%] h-auto object-contain">
       
-      <!-- 4. 管宴席的去背圖 -->
+      <!-- 4. 管宴席的去背圖 (右上角) -->
       <img src="https://juan-di-cake.github.io/Jesus_web/assets/wedding/master.png" alt="管筵席的" draggable="false"
            onclick="showDialog('🍷 管筵席的', '大家都給我盯緊點！我是這場婚宴的總策劃。你們知道要是這七天的喜宴上『酒喝盡了』，會面臨多可怕的後果嗎？這在我們的規矩裡是極大的羞辱！新郎家族不僅會身敗名裂，女方家屬甚至可以依據『未盡款待義務』提出法律訴訟，要求巨額的金錢賠償！這會毀了兩個家族的契約，我也會跟著完蛋！所以，把酒水看緊了，絕對不能出差錯！', 'master.mp4')" 
-           class="hotspot-img absolute top-[20%] left-[85%] w-[10%] h-[38%] object-contain">
+           class="hotspot-img absolute top-[23%] left-[84%] w-[9%] h-auto object-contain">
 
-      <!-- 5. 僕人去背圖 -->
+      <!-- 5. 僕人去背圖 (右下角) -->
       <img src="https://juan-di-cake.github.io/Jesus_web/assets/wedding/servant.png" alt="僕人" draggable="false"
            onclick="showDialog('🧑‍🍳 服侍的僕人', '呼，這工作真不輕鬆！我們得不斷去打水，把這些巨大的『潔淨用石罐』裝滿。這可不是普通的罐子，每個都能裝下 80 到 120 公升的水呢！因為客人入席前都必須依照規矩洗手洗腳，這對我們來說可是個大工程！', 'servant.mp4')" 
-           class="hotspot-img absolute top-[60%] left-[82%] w-[12%] h-[30%] object-contain">
+           class="hotspot-img absolute top-[52%] left-[76%] w-[18%] h-auto object-contain">
 
       <!-- ================= 實物道具去背圖 (彩蛋語音) ================= -->
       
-      <!-- 6. 潔淨用石缸去背圖 -->
-      <img src="https://juan-di-cake.github.io/Jesus_web/assets/wedding/stone jar.png" alt="石缸" draggable="false"
+      <!-- 6. 潔淨用石缸去背圖 (中上方偏右) -->
+      <!-- 檔名已更新為 stone_jar.png -->
+      <img src="https://juan-di-cake.github.io/Jesus_web/assets/wedding/stone_jar.png" alt="石缸" draggable="false"
            onclick="showDialog('🏺 潔淨用石罐', '我是一顆沉重的灰石罐！我不裝酒，我只裝清澈的水。我是專門為了猶太人的『潔淨儀式』而打造的。等一下要是沒有水了，可別怪我呀！', 'jars.mp4')" 
-           class="hotspot-img absolute top-[20%] left-[65%] w-[12%] h-[25%] object-contain">
+           class="hotspot-img absolute top-[22%] left-[68%] w-[15%] h-auto object-contain">
 
-      <!-- 7. 泥陶油燈去背圖 -->
+      <!-- 7. 泥陶油燈去背圖 (中下方，賓客與器皿之間) -->
       <img src="https://juan-di-cake.github.io/Jesus_web/assets/wedding/lamp.png" alt="油燈" draggable="false"
            onclick="showDialog('🪔 泥陶油燈', '雖然我個子小，但我站在高高的燈臺上喔！婚宴到了晚上，就全靠我發出溫暖的光芒，照亮桌上的美食和每一位開心賓客的笑臉了。', 'lamp.mp4')" 
-           class="hotspot-img absolute top-[65%] left-[38%] w-[6%] h-[15%] object-contain">
+           class="hotspot-img absolute top-[62%] left-[39%] w-[5%] h-auto object-contain">
 
-      <!-- 8. 餐桌美食去背圖 -->
+      <!-- 8. 餐桌美食去背圖 (中下方偏右) -->
       <img src="https://juan-di-cake.github.io/Jesus_web/assets/wedding/food.png" alt="美食" draggable="false"
            onclick="showDialog('🥖 餐桌美食', '看過來！我們是豐盛的無花果、葡萄，還有裝在木盤裡的烤肉與麵包！我們被裝盛在精美的『雙耳陶罐』旁邊，可是這七天婚宴中，大家最期待的主角呢！', 'food.mp4')" 
-           class="hotspot-img absolute top-[80%] left-[55%] w-[16%] h-[15%] object-contain">
-      
-      
-
+           class="hotspot-img absolute top-[62%] left-[49%] w-[25%] h-auto object-contain">
+           
     </div>
 
     <!-- === RPG 對話框 UI === -->
-    <div id="dialog-box" class="absolute bottom-0 w-full bg-black/85 backdrop-blur-md border-t-4 border-yellow-600 text-white p-4 pb-6 shadow-2xl transition-transform duration-300 transform translate-y-full flex flex-col justify-center items-center pointer-events-auto z-50">
-      <div class="w-full max-w-3xl">
-        <div class="flex justify-between items-center mb-2">
-          <h3 id="dialog-name" class="text-yellow-400 font-bold text-xl drop-shadow">角色名稱</h3>
-          <button onclick="closeDialog()" class="text-gray-300 hover:text-white bg-white/20 rounded-full w-8 h-8 flex items-center justify-center text-lg">✕</button>
+    <div id="dialog-box" class="absolute bottom-0 w-full max-w-[177.78vh] bg-black/85 backdrop-blur-md border-t-4 border-yellow-600 text-white p-4 pb-6 md:pb-8 shadow-2xl transition-transform duration-300 transform translate-y-full flex flex-col justify-center items-center pointer-events-auto z-50">
+      <div class="w-full max-w-4xl px-4">
+        <div class="flex justify-between items-center mb-3">
+          <h3 id="dialog-name" class="text-yellow-400 font-bold text-xl md:text-2xl drop-shadow">角色名稱</h3>
+          <button onclick="closeDialog()" class="text-gray-300 hover:text-white bg-white/20 rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center text-lg transition-colors">✕</button>
         </div>
         
-        <!-- 【預留 MP4 播放器空間】 -->
-        <!-- 如果您只想播放聲音不想要畫面，可以在下方 class 中保留 'hidden'，或改用 <audio> 標籤 -->
-        <audio id="npc-media" class="hidden" npc media></audio>
+        <!-- 【修復語法錯誤】移除了多餘的 npc media 屬性 -->
+        <audio id="npc-media" class="hidden" controls></audio>
         
-        <p id="dialog-text" class="text-lg leading-relaxed min-h-[3.5rem]">對話內容...</p>
+        <div class="max-h-[25vh] overflow-y-auto custom-scrollbar pr-2">
+          <p id="dialog-text" class="text-base md:text-lg lg:text-xl leading-relaxed min-h-[4rem]">對話內容...</p>
+        </div>
       </div>
     </div>
 
     <!-- === 物件詳細資訊卡 UI === -->
     <div id="info-modal" class="absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 bg-black/70 backdrop-blur-sm z-50">
-      <div class="bg-[#f4ebd0] text-gray-900 rounded-xl shadow-2xl p-6 max-w-lg w-[85%] border-2 border-yellow-700/30 transform scale-95 transition-transform duration-300" id="info-content">
-        <div class="flex justify-between items-start mb-4 border-b border-yellow-700/20 pb-2">
-          <h2 id="info-title" class="text-2xl font-bold text-yellow-900">物件名稱</h2>
-          <button onclick="closeInfo()" class="text-yellow-900 hover:text-black font-bold text-xl">✕</button>
+      <div class="bg-[#f4ebd0] text-gray-900 rounded-xl shadow-2xl p-6 md:p-8 max-w-lg w-[85%] border-2 border-yellow-700/30 transform scale-95 transition-transform duration-300" id="info-content">
+        <div class="flex justify-between items-start mb-4 border-b border-yellow-700/20 pb-3">
+          <h2 id="info-title" class="text-2xl md:text-3xl font-bold text-yellow-900">物件名稱</h2>
+          <button onclick="closeInfo()" class="text-yellow-900 hover:text-black bg-yellow-700/10 rounded-full w-8 h-8 flex items-center justify-center font-bold text-xl transition-colors">✕</button>
         </div>
-        <div class="space-y-4">
-          <p id="info-desc" class="text-lg leading-relaxed">物件詳細說明文字。</p>
+        <div class="space-y-4 max-h-[40vh] overflow-y-auto custom-scrollbar pr-2">
+          <p id="info-desc" class="text-lg md:text-xl leading-relaxed">物件詳細說明文字。</p>
         </div>
         <div class="mt-6 text-center">
-          <button onclick="closeInfo()" class="bg-yellow-700 hover:bg-yellow-800 text-white px-8 py-2 rounded-full font-bold shadow-md transition-colors">了解</button>
+          <button onclick="closeInfo()" class="bg-yellow-700 hover:bg-yellow-800 text-white px-8 py-3 rounded-full font-bold shadow-md transition-colors text-lg md:text-xl">了解</button>
         </div>
       </div>
     </div>
@@ -130,7 +150,7 @@
 
   <!-- ================= 強制橫向螢幕提示遮罩 ================= -->
   <div id="portrait-warning" class="fixed inset-0 z-[100] bg-black text-white flex-col items-center justify-center p-6 text-center">
-    <div class="w-24 h-24 mb-6 animate-pulse">
+    <div class="w-24 h-24 mb-6 animate-pulse text-yellow-500">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
         <path d="M12 18h.01"></path>
@@ -139,29 +159,35 @@
         <path d="M17 7l3 3-3 3"></path>
       </svg>
     </div>
-    <h2 class="text-2xl font-bold text-yellow-400 mb-2">請旋轉您的手機</h2>
-    <p class="text-gray-300 text-lg">本導覽專為橫向螢幕 (Landscape) 設計，<br>請將手機轉為橫向以獲得最佳體驗。</p>
+    <h2 class="text-2xl md:text-3xl font-bold text-yellow-400 mb-4">請旋轉您的設備</h2>
+    <p class="text-gray-300 text-lg md:text-xl leading-relaxed">本導覽專為橫向螢幕設計，<br>請將手機或平板轉為橫向以獲得最佳體驗。</p>
   </div>
 
   <script>
     let typingInterval;
 
-    // 加入 mediaSrc 參數接收 MP4 路徑
+    // 加入 mediaSrc 參數接收 MP4/音檔 路徑
     window.showDialog = function(name, text, mediaSrc) {
       resetMedia();
       const dialogBox = document.getElementById('dialog-box');
       document.getElementById('dialog-name').textContent = name;
       document.getElementById('dialog-text').innerHTML = ""; 
       
-      // 處理 MP4 播放邏輯
+      // 處理音訊/影片播放邏輯
       const mediaEl = document.getElementById('npc-media');
       if (mediaSrc) {
         mediaEl.src = mediaSrc;
-        mediaEl.classList.remove('hidden'); // 顯示播放器
+        // 若您的資源是音檔，可保持 hidden。若需要呈現影片畫面，請移除下方 hidden 並調整樣式
+        // mediaEl.classList.remove('hidden'); 
+        
         // 嘗試自動播放 (需注意瀏覽器可能會阻擋無靜音的自動播放)
-        mediaEl.play().catch(e => console.log("自動播放被瀏覽器阻擋，需使用者手動點擊播放:", e));
+        let playPromise = mediaEl.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(e => {
+            console.log("自動播放被阻擋，需使用者手動互動:", e);
+          });
+        }
       } else {
-        mediaEl.classList.add('hidden');
         mediaEl.src = "";
       }
 
@@ -204,10 +230,14 @@
       }, 300);
     }
 
+    // 打字機特效
     function typeWriterEffect(element, text) {
       let i = 0;
       clearInterval(typingInterval);
       const plainText = text.replace(/<[^>]*>?/gm, ''); 
+
+      // 針對長文本，加速打字機速度，避免等太久
+      let speed = plainText.length > 100 ? 30 : 50;
 
       typingInterval = setInterval(() => {
         if (i < plainText.length) {
@@ -216,13 +246,13 @@
         } else {
           clearInterval(typingInterval);
         }
-      }, 50); 
+      }, speed); 
     }
 
+    // 重設播放器與打字機
     function resetMedia() {
       clearInterval(typingInterval);
       
-      // 停止影片/音訊播放並將時間歸零
       const mediaEl = document.getElementById('npc-media');
       if (mediaEl) {
         mediaEl.pause();
@@ -230,10 +260,11 @@
       }
     }
 
-    // 當離開網頁或切換分頁時，確保影片停止播放
+    // 當離開網頁或切換分頁時，確保音訊/影片停止播放
     window.addEventListener('beforeunload', resetMedia);
-    document.addEventListener('visibilitychange', () => { if (document.hidden) resetMedia(); });
+    document.addEventListener('visibilitychange', () => { 
+      if (document.hidden) resetMedia(); 
+    });
   </script>
 </body>
 </html>
-```eof

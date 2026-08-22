@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>迦拿婚宴 - 沉浸式互動導覽 (Canvas 版)</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { 
+      font-family: 'PingFang TC', 'Noto Sans TC', sans-serif; 
+      overflow: hidden; 
+      margin: 0; 
+      padding: 0; 
+      background-color: #000; 
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    @media screen and (orientation: portrait) {
+      #portrait-warning { display: flex; }
+    }
+    @media screen and (orientation: landscape) {
+      #portrait-warning { display: none; }
+    }
+    
+    /* 隱藏滾動條 */
+    ::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="bg-black text-gray-800">
+
+  <!-- ================= 載入畫面 ================= -->
+  <div id="loading-screen" class="fixed inset-0 z-[200] bg-[#0a0a0a] flex flex-col items-center justify-center text-white transition-opacity duration-700 ease-in-out">
+    <div class="relative w-20 h-20 mb-6">
+      <div class="absolute inset-0 border-4 border-yellow-900/40 rounded-full"></div>
+      <div class="absolute inset-0 border-4 border-yellow-500 rounded-full border-t-transparent animate-spin"></div>
+    </div>
+    <h2 class="text-3xl font-bold text-yellow-500 mb-3 tracking-widest drop-shadow-lg">迦拿婚宴</h2>
+    <p class="text-gray-400 text-lg font-medium tracking-wide">畫布與圖稿資源載入中... <span id="loading-progress" class="text-yellow-400">0%</span></p>
+  </div>
+
+  <!-- ================= Canvas 繪圖導覽主畫面 ================= -->
+  <div id="scene-container" class="fixed inset-0 w-full h-full bg-black flex items-center justify-center">
+    
+    <!-- 核心 16:9 比例容器 -->
+    <div id="canvas-wrapper" class="relative w-full aspect-video max-w-[177.78vh] max-h-[100vh] mx-auto overflow-hidden flex items-center justify-center">
+      
+      <!-- HTML5 Canvas 畫布 -->
+      <canvas id="game-canvas" class="w-full h-full block cursor-default"></canvas>
+
+      <!-- 右下角：婚禮流程按鈕 Overlay -->
+      <button onclick="showFlow()" 
+              class="absolute bottom-[4%] left-[3%] z-40 bg-yellow-950/80 hover:bg-yellow-700 text-yellow-200 hover:text-white border-2 border-yellow-500/80 px-4 py-2.5 rounded-xl backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.8)] flex items-center gap-2 transition-all duration-300 hover:scale-105 active:scale-95 text-sm md:text-base font-bold cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span>婚禮流程</span>
+      </button>
+
+    </div>
+
+    <!-- === RPG 對話框 UI === -->
+    <div id="dialog-box" class="absolute bottom-0 w-full bg-black/85 backdrop-blur-md border-t-4 border-yellow-600 text-white p-4 pb-6 shadow-2xl transition-transform duration-300 transform translate-y-full flex flex-col justify-center items-center pointer-events-auto z-50">
+      <div class="w-full max-w-3xl relative">
+        <div class="flex justify-between items-center mb-2">
+          <h3 id="dialog-name" class="text-yellow-400 font-bold text-xl drop-shadow">角色名稱</h3>
+          <button onclick="closeDialog()" class="text-gray-300 hover:text-white bg-white/20 rounded-full w-8 h-8 flex items-center justify-center text-lg absolute right-0 top-0">✕</button>
+        </div>
+        
+        <audio id="npc-media" class="hidden"></audio>
+        <p id="dialog-text" class="text-lg leading-relaxed min-h-[3.5rem] pr-6">對話內容...</p>
+      </div>
+    </div>
+
+    <!-- === 物件/流程 詳細資訊卡 UI === -->
+    <div id="info-modal" class="absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 bg-black/80 backdrop-blur-sm z-[60]">
+      <div class="bg-[#f4ebd0] text-gray-900 rounded-xl shadow-2xl p-6 max-w-lg w-[85%] border-2 border-yellow-700/30 transform scale-95 transition-transform duration-300" id="info-content">
+        <div class="flex justify-between items-start mb-4 border-b border-yellow-700/20 pb-2">
+          <h2 id="info-title" class="text-2xl font-bold text-yellow-900">物件名稱</h2>
+          <button onclick="closeInfo()" class="text-yellow-900 hover:text-black font-bold text-2xl leading-none">✕</button>
+        </div>
+        <div class="space-y-4">
+          <div id="info-desc" class="text-lg leading-relaxed"></div>
+        </div>
+        <div class="mt-6 text-center">
+          <button onclick="closeInfo()" class="bg-yellow-800 hover:bg-yellow-900 text-white px-8 py-2.5 rounded-full font-bold shadow-md transition-colors w-full sm:w-auto">關閉</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 強制橫向螢幕提示遮罩 ================= -->
+  <div id="portrait-warning" class="fixed inset-0 z-[300] bg-black text-white flex-col items-center justify-center p-6 text-center">
+    <div class="w-24 h-24 mb-6 animate-pulse text-yellow-500">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+        <path d="M12 18h.01"></path>
+        <path d="M4 12c0-3 3-5 5-5" stroke-dasharray="2 4"></path>
+        <path d="M20 12c0-3-3-5-5-5" stroke-dasharray="2 4"></path>
+        <path d="M17 7l3 3-3 3"></path>
+      </svg>
+    </div>
+    <h2 class="text-2xl font-bold text-yellow-400 mb-2">請旋轉您的設備</h2>
+    <p class="text-gray-300 text-lg">本導覽專為橫向螢幕 (Landscape) 設計，<br>請將手機轉為橫向以獲得最佳體驗。</p>
+  </div>
+
+  <script>
+    // ================= Canvas 畫布引擎與互動變數 =================
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    const canvasWrapper = document.getElementById('canvas-wrapper');
+
+    // 畫布基礎參考解析度 (16:9)
+    const BASE_WIDTH = 1920;
+    const BASE_HEIGHT = 1080;
+
+    let hoverHotspot = null;
+    let pulseAngle = 0; // 用於指示脈衝圈動畫
+
+    // 資源清單 (包含背景與 Hotspots)
+    const bgImage = new Image();
+    bgImage.src = 'https://juan-di-cake.github.io/Jesus_web/assets/wedding/back.png';
+
+    // 互動點位定義 (相對比例座標 % 與寬度 %)
+    const hotspots = [
+      {
+        id: 'bride',
+        name: '👰 新娘 (Bride)',
+        text: '辦一場婚禮真的很辛苦呢！我們不只要連續慶祝七天，還要邀請全村的人一起來參加喜宴。為了今天，我穿上了這件精心準備的禮服，上面有最高級的『金鑲繡花』。雖然戴著厚重的頭紗和頸飾有點重，但這是我一生中最榮耀、最美麗的時刻！',
+        media: 'https://juan-di-cake.github.io/Jesus_web/assets/wedding/dress.m4a',
+        src: 'https://juan-di-cake.github.io/Jesus_web/assets/wedding/bride.png',
+        xPct: 0.05,
+        yPct: 0.28,
+        wPct: 0.13
+      },
+      {
+        id: 'groom',
+        name: '🤵 新郎 (Groom)',
+        text: '感謝村裡的爸爸媽媽們這幾天來幫忙籌備喜宴。你們看我外袍上披著的這件『祈禱巾 (Tallit)』，邊緣還綁著特別的『繸子』。這是為了提醒我們，即使在歡慶的時刻，也不要忘記我們是上帝的子民，要時刻把祂的律法與恩典記在心裡。',
+        media: 'groom.mp4',
+        src: 'https://juan-di-cake.github.io/Jesus_web/assets/wedding/Groom.png',
+        xPct: 0.17,
+        yPct: 0.22,
+        wPct: 0.11
+      },
+      {
+        id: 'guest',
+        name: '🧔 賓客 (Guest)',
+        text: '這場婚宴太棒了！我們脫下皮革涼鞋，斜躺在這種『ㄇ字型 (Tri-clinium)』的座席上，真的是非常放鬆舒服。能這樣和親朋好友們一起吃喝快樂，慶祝這對新人的結合，真是太有福了！',
+        media: 'guest.mp4',
+        src: 'https://juan-di-cake.github.io/Jesus_web/assets/wedding/Guest.png',
+        xPct: 0.26,
+        yPct: 0.43,
+        wPct: 0.11
+      },
+      {
+        id: 'master',
+        name: '🍷 管筵席的人',
+        text: '大家都給我盯緊點！我是這場婚宴的總策劃。你們知道要是這七天的喜宴上『酒喝盡了』，會面臨多可怕的後果嗎？這在我們的規矩裡是極大的羞辱！新郎家族不僅會身敗名裂，女方家屬甚至可以依據『未盡款待義務』提出法律訴訟，要求巨額的金錢賠償！這會毀了兩個家族的契約，我也會跟著完蛋！所以，把酒水看緊了，絕對不能出差錯！',
+        media: 'master.mp4',
+        src: 'https://juan-di-cake.github.io/Jesus_web/assets/wedding/master.png',
+        xPct: 0.84,
+        yPct: 0.23,
+        wPct: 0.09
+      },
+      {
+        id: 'servant',
+        name: '🧑‍🍳 服侍的僕人',
+        text: '呼，這工作真不輕鬆！我們得不斷去打水，把這些巨大的『潔淨用石缸』裝滿。這可不是普通的罐子，每個都能裝下 80 到 120 公升的水呢！因為客人入席前都必須依照規矩洗手洗腳，這對我們來說可是個大工程！',
+        media: 'servant.mp4',
+        src: 'https://juan-di-cake.github.io/Jesus_web/assets/wedding/servant.png',
+        xPct: 0.76,
+        yPct: 0.52,
+        wPct: 0.18
+      },
+      {
+        id: 'stone_jar',
+        name: '🏺 潔淨用石缸 (Limestone Jars)',
+        text: '我是一顆沉重的灰石缸！我不裝酒，我只裝清澈的水。我是專門為了猶太人的『潔淨儀式』而打造的，因為石器不容易沾染不潔。等一下要是沒有水了，可別怪我呀！',
+        media: 'jars.mp4',
+        src: 'https://juan-di-cake.github.io/Jesus_web/assets/wedding/stone_jar.png',
+        xPct: 0.65,
+        yPct: 0.26,
+        wPct: 0.15
+      },
+      {
+        id: 'lamp',
+        name: '🪔 泥陶油燈 (Lighting)',
+        text: '雖然我個子小，但我站在高高的燈臺上喔！婚宴到了晚上，就全靠我發出溫暖的光芒，照亮桌上的美食和每一位開心賓客的笑臉了。',
+        media: 'lamp.mp4',
+        src: 'https://juan-di-cake.github.io/Jesus_web/assets/wedding/lamp.png',
+        xPct: 0.39,
+        yPct: 0.62,
+        wPct: 0.05
+      },
+      {
+        id: 'food',
+        name: '🥖 器皿與食物',
+        text: '看過來！我們是豐盛的無花果、葡萄，還有裝在木盤裡的烤肉與麵餅！當地常見的食物還有豆類、堅果跟香草等，我們被裝盛在精美的陶罐與木器中，可是這七天婚宴中大家最期待的主角呢！',
+        media: 'food.mp4',
+        src: 'https://juan-di-cake.github.io/Jesus_web/assets/wedding/food.png',
+        xPct: 0.49,
+        yPct: 0.62,
+        wPct: 0.25
+      }
+    ];
+
+    // 初始化圖片物件與動畫狀態
+    hotspots.forEach(item => {
+      item.img = new Image();
+      item.img.src = item.src;
+      item.scale = 1.0;       // 當前動態縮放比 (Lerp 動畫)
+      item.targetScale = 1.0; // 目標縮放比
+      item.loaded = false;
+      item.img.onload = () => { item.loaded = true; checkAllLoaded(); };
+      item.img.onerror = () => { item.loaded = true; checkAllLoaded(); }; // 防呆
+    });
+
+    let totalResources = hotspots.length + 1; // +1 為背景圖
+    let loadedResources = 0;
+
+    bgImage.onload = () => { loadedResources++; checkAllLoaded(); };
+    bgImage.onerror = () => { loadedResources++; checkAllLoaded(); };
+
+    function checkAllLoaded() {
+      let currentLoaded = (bgImage.complete ? 1 : 0) + hotspots.filter(h => h.img.complete).length;
+      let percent = Math.floor((currentLoaded / totalResources) * 100);
+      document.getElementById('loading-progress').textContent = `${percent}%`;
+
+      if (currentLoaded >= totalResources) {
+        setTimeout(() => {
+          const loader = document.getElementById('loading-screen');
+          if (loader) {
+            loader.classList.add('opacity-0');
+            setTimeout(() => { loader.style.display = 'none'; }, 700);
+          }
+        }, 300);
+      }
+    }
+
+    // ================= 畫布尺寸自動調整 (Responsive Scaling) =================
+    function resizeCanvas() {
+      const rect = canvasWrapper.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      
+      // 縮放 Canvas 上下文以支援高 PPI 螢幕
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    // 計算 Hotspot 在當前畫布上的實際像素位置 (以邏輯像素 rect.width/height 為基準)
+    function getHotspotRect(item) {
+      const rect = canvasWrapper.getBoundingClientRect();
+      const drawW = rect.width * item.wPct;
+      
+      // 依原圖寬高比算出繪製高度
+      const aspect = item.img.naturalWidth ? (item.img.naturalHeight / item.img.naturalWidth) : 1;
+      const drawH = drawW * aspect;
+      
+      const drawX = rect.width * item.xPct;
+      const drawY = rect.height * item.yPct;
+
+      return { x: drawX, y: drawY, w: drawW, h: drawH };
+    }
+
+    // ================= Canvas 繪製主循環 Loop =================
+    function render() {
+      const rect = canvasWrapper.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      // 1. 繪製背景圖
+      if (bgImage.complete && bgImage.naturalWidth !== 0) {
+        ctx.drawImage(bgImage, 0, 0, rect.width, rect.height);
+      }
+
+      // 更新指示波紋動畫角度
+      pulseAngle = (pulseAngle + 0.04) % (Math.PI * 2);
+      const pulseFactor = 0.5 + 0.5 * Math.sin(pulseAngle);
+
+      // 2. 繪製所有 Hotspot 物件
+      hotspots.forEach(item => {
+        if (!item.img.complete || item.img.naturalWidth === 0) return;
+
+        const hRect = getHotspotRect(item);
+
+        // 插值動態縮放 Lerp (流暢 hover 效果)
+        item.scale += (item.targetScale - item.scale) * 0.2;
+
+        ctx.save();
+
+        // 平移至物件中心點以便進行中心軸縮放
+        const centerX = hRect.x + hRect.w / 2;
+        const centerY = hRect.y + hRect.h / 2;
+
+        ctx.translate(centerX, centerY);
+        ctx.scale(item.scale, item.scale);
+
+        // 如果 hover，繪製金色光暈特效
+        if (item.scale > 1.01) {
+          ctx.shadowColor = 'rgba(250, 204, 21, 0.9)';
+          ctx.shadowBlur = 25 * ((item.scale - 1.0) / 0.15);
+        } else {
+          // 未選中時繪製微弱底層陰影
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+          ctx.shadowBlur = 6;
+          ctx.shadowOffsetY = 4;
+        }
+
+        // 在相對原點繪製去背圖
+        ctx.drawImage(item.img, -hRect.w / 2, -hRect.h / 2, hRect.w, hRect.h);
+
+        ctx.restore();
+
+
+      });
+
+      requestAnimationFrame(render);
+    }
+
+    // ================= 觸控與滑鼠碰撞檢測 (Hit Testing) =================
+    function getEventPos(e) {
+      const rect = canvasWrapper.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    function checkHit(pos) {
+      // 倒序檢查，讓疊在上方者優先判定
+      for (let i = hotspots.length - 1; i >= 0; i--) {
+        const item = hotspots[i];
+        const hRect = getHotspotRect(item);
+
+        if (pos.x >= hRect.x && pos.x <= hRect.x + hRect.w &&
+            pos.y >= hRect.y && pos.y <= hRect.y + hRect.h) {
+          return item;
+        }
+      }
+      return null;
+    }
+
+    // 滑鼠移動 Event
+    canvasWrapper.addEventListener('mousemove', (e) => {
+      const pos = getEventPos(e);
+      const hit = checkHit(pos);
+
+      hotspots.forEach(item => {
+        if (item === hit) {
+          item.targetScale = 1.15; // 放大 15%
+        } else {
+          item.targetScale = 1.0;
+        }
+      });
+
+      if (hit) {
+        canvas.style.cursor = 'defa';
+      } else {
+        canvas.style.cursor = 'default';
+      }
+    });
+
+    // 滑鼠移出 Canvas 容器
+    canvasWrapper.addEventListener('mouseleave', () => {
+      hotspots.forEach(item => item.targetScale = 1.0);
+      canvas.style.cursor = 'default';
+    });
+
+    // 點擊事件 (Mouse & Touch)
+    function handleCanvasClick(e) {
+      const pos = getEventPos(e);
+      const hit = checkHit(pos);
+
+      if (hit) {
+        showDialog(hit.name, hit.text, hit.media);
+      }
+    }
+
+    canvasWrapper.addEventListener('click', handleCanvasClick);
+
+    // ================= 原有對話框與 MP4/音訊控制邏輯 =================
+    let typingInterval;
+
+    window.showDialog = function(name, text, mediaSrc) {
+      resetMedia();
+      const dialogBox = document.getElementById('dialog-box');
+      document.getElementById('dialog-name').textContent = name;
+      document.getElementById('dialog-text').innerHTML = ""; 
+      
+      const mediaEl = document.getElementById('npc-media');
+      if (mediaSrc) {
+        mediaEl.src = mediaSrc;
+        mediaEl.classList.remove('hidden'); 
+        mediaEl.play().catch(e => console.log("需使用者互動後播放音訊:", e));
+      } else {
+        mediaEl.classList.add('hidden');
+        mediaEl.src = "";
+      }
+
+      dialogBox.classList.remove('translate-y-full');
+      typeWriterEffect(document.getElementById('dialog-text'), text);
+    }
+
+    window.closeDialog = function() {
+      document.getElementById('dialog-box').classList.add('translate-y-full');
+      resetMedia();
+    }
+
+    window.showInfo = function(title, descHTML) {
+      resetMedia(); 
+      closeDialog(); 
+      
+      const modal = document.getElementById('info-modal');
+      const content = document.getElementById('info-content');
+      
+      document.getElementById('info-title').textContent = title;
+      document.getElementById('info-desc').innerHTML = descHTML;
+      
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.classList.add('opacity-100', 'pointer-events-auto');
+      content.classList.remove('scale-95');
+      content.classList.add('scale-100');
+    }
+
+    window.closeInfo = function() {
+      const modal = document.getElementById('info-modal');
+      const content = document.getElementById('info-content');
+      
+      content.classList.remove('scale-100');
+      content.classList.add('scale-95');
+      modal.classList.remove('opacity-100');
+      
+      setTimeout(() => {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.classList.remove('pointer-events-auto');
+      }, 300);
+    }
+
+    // 顯示婚禮流程 Modal
+    window.showFlow = function() {
+      const flowContent = `
+        <div class="space-y-3 mt-2 text-left text-yellow-900 font-medium">
+            <div class="flex items-center gap-4 bg-yellow-600/10 p-3 rounded-lg border border-yellow-700/20">
+              <span class="bg-yellow-800 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold shrink-0 shadow-inner">1</span> 
+              <span class="text-lg">訂婚 (Kiddushin)</span>
+            </div>
+            <div class="flex items-center gap-4 bg-yellow-600/10 p-3 rounded-lg border border-yellow-700/20">
+              <span class="bg-yellow-800 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold shrink-0 shadow-inner">2</span> 
+              <span class="text-lg">新郎迎娶</span>
+            </div>
+            <div class="flex items-center gap-4 bg-yellow-600/10 p-3 rounded-lg border border-yellow-700/20">
+              <span class="bg-yellow-800 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold shrink-0 shadow-inner">3</span> 
+              <span class="text-lg">遊行</span>
+            </div>
+            <div class="flex items-center gap-4 bg-yellow-600/10 p-3 rounded-lg border border-yellow-700/20">
+              <span class="bg-yellow-800 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold shrink-0 shadow-inner">4</span> 
+              <span class="text-lg">婚宴 (多日)</span>
+            </div>
+            <div class="flex items-center gap-4 bg-yellow-600/10 p-3 rounded-lg border border-yellow-700/20">
+              <span class="bg-yellow-800 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold shrink-0 shadow-inner">5</span> 
+              <span class="text-lg">祝福</span>
+            </div>
+            <div class="flex items-center gap-4 bg-yellow-600/10 p-3 rounded-lg border border-yellow-700/20">
+              <span class="bg-yellow-800 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold shrink-0 shadow-inner">6</span> 
+              <span class="text-lg">新房</span>
+            </div>
+        </div>
+      `;
+      showInfo('📜 猶太婚禮傳統流程', flowContent);
+    }
+
+    function typeWriterEffect(element, text) {
+      let i = 0;
+      clearInterval(typingInterval);
+      const plainText = text.replace(/<[^>]*>?/gm, ''); 
+
+      typingInterval = setInterval(() => {
+        if (i < plainText.length) {
+          element.textContent += plainText.charAt(i);
+          i++;
+        } else {
+          clearInterval(typingInterval);
+        }
+      }, 40); 
+    }
+
+    function resetMedia() {
+      clearInterval(typingInterval);
+      const mediaEl = document.getElementById('npc-media');
+      if (mediaEl) {
+        mediaEl.pause();
+        mediaEl.currentTime = 0;
+      }
+    }
+
+    // 初始化 Canvas 尺寸並啟動動態繪圖 Loop
+    window.onload = function() {
+      resizeCanvas();
+      requestAnimationFrame(render);
+    };
+
+    window.addEventListener('beforeunload', resetMedia);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) resetMedia(); });
+  </script>
+</body>
+</html>

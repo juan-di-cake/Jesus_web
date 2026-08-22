@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluid Grid Layout - Interactive</title>
+    
+    <!-- 引入 Tailwind CSS 以支援對話框的樣式 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; 
+            background-color: #000;
+            font-family: 'PingFang TC', 'Noto Sans TC', sans-serif;
+            user-select: none;
+        }
+
+        /* 網格佈局 */
+        .grid-container {
+            display: grid;
+            width: 100%;
+            height: 100%;
+            grid-template-columns: 382fr 111fr 565fr 382fr;
+            grid-template-rows: 277fr 235fr 63fr 161fr 77fr 211fr;
+            gap: 2px; /* 框線間距，可自行調整 */
+        }
+
+        /* 共用 Frame 設定 */
+        .frame {
+            position: relative;
+            background: #D9D9D9;
+            overflow: hidden;
+            cursor: pointer;
+            border-radius: 4px;
+            /* 對應原先 Lerp 動畫的流暢感 */
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
+        }
+
+        /* 滑鼠移動效果 (Hover) - 參考原設定：放大15%、金色光暈 */
+        .frame:hover {
+            transform: scale(1.05); /* 建議 DOM 元素放大 5~10% 較為自然，可依需求改為 1.15 */
+            box-shadow: 0 0 25px rgba(250, 204, 21, 0.9);
+            z-index: 10;
+        }
+
+        /* 圖片與影片(Media)填滿 Frame 的設定 */
+        .media-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none; 
+        }
+
+        /* 定義每一個 Frame 佔據的網格位置 */
+        .frame-1  { grid-area: 1 / 1 / 2 / 2; }
+        .frame-2  { grid-area: 3 / 1 / 5 / 3; }
+        .frame-3  { grid-area: 2 / 1 / 3 / 2; }
+        .frame-4  { grid-area: 5 / 1 / 7 / 3; }
+        .frame-5  { grid-area: 3 / 3 / 6 / 4; }
+        .frame-6  { grid-area: 6 / 3 / 7 / 5; }
+        .frame-7  { grid-area: 4 / 4 / 6 / 5; }
+        .frame-8  { grid-area: 1 / 2 / 3 / 4; }
+        .frame-9  { grid-area: 2 / 4 / 4 / 5; }
+        .frame-10 { grid-area: 1 / 4 / 2 / 5; }
+    </style>
+</head>
+<body class="bg-black text-gray-800">
+
+    <!-- Grid 主畫面 -->
+    <div class="grid-container" id="canvas-wrapper">
+        <div class="frame frame-1" onclick="handleFrameClick(1)">
+            <img class="media-content" src="your-image-1.jpg" alt="Frame 1">
+        </div>
+        <div class="frame frame-2" onclick="handleFrameClick(2)">
+            <img class="media-content" src="your-image-2.jpg" alt="Frame 2">
+        </div>
+        <div class="frame frame-3" onclick="handleFrameClick(3)">
+            <img class="media-content" src="your-image-3.jpg" alt="Frame 3">
+        </div>
+        <div class="frame frame-4" onclick="handleFrameClick(4)">
+            <img class="media-content" src="your-image-4.jpg" alt="Frame 4">
+        </div>
+        <div class="frame frame-5" onclick="handleFrameClick(5)">
+            <img class="media-content" src="your-image-5.jpg" alt="Frame 5">
+        </div>
+        <div class="frame frame-6" onclick="handleFrameClick(6)">
+            <img class="media-content" src="your-image-6.jpg" alt="Frame 6">
+        </div>
+        <div class="frame frame-7" onclick="handleFrameClick(7)">
+            <img class="media-content" src="your-image-7.jpg" alt="Frame 7">
+        </div>
+        <div class="frame frame-8" onclick="handleFrameClick(8)">
+            <img class="media-content" src="your-image-8.jpg" alt="Frame 8">
+        </div>
+        <div class="frame frame-9" onclick="handleFrameClick(9)">
+            <img class="media-content" src="your-image-9.jpg" alt="Frame 9">
+        </div>
+        <div class="frame frame-10" onclick="handleFrameClick(10)">
+            <img class="media-content" src="your-image-10.jpg" alt="Frame 10">
+        </div>
+    </div>
+
+    <!-- === RPG 對話框 UI (完整保留你原本的設定) === -->
+    <div id="dialog-box" class="absolute bottom-0 w-full bg-black/85 backdrop-blur-md border-t-4 border-yellow-600 text-white p-4 pb-6 shadow-2xl transition-transform duration-300 transform translate-y-full flex flex-col justify-center items-center pointer-events-auto z-50">
+        <div class="w-full max-w-3xl relative">
+            <div class="flex justify-between items-center mb-2">
+                <h3 id="dialog-name" class="text-yellow-400 font-bold text-xl drop-shadow">角色名稱</h3>
+                <button onclick="closeDialog()" class="text-gray-300 hover:text-white bg-white/20 rounded-full w-8 h-8 flex items-center justify-center text-lg absolute right-0 top-0">✕</button>
+            </div>
+            
+            <audio id="npc-media" class="hidden"></audio>
+            <p id="dialog-text" class="text-lg leading-relaxed min-h-[3.5rem] pr-6">對話內容...</p>
+        </div>
+    </div>
+
+    <script>
+        // 對應每個 frame 的資料設定 (替換原本的 hotspots 陣列)
+        const frameData = {
+            1: {
+                name: '👰 新娘 (Bride)',
+                text: '辦一場婚禮真的很辛苦呢！這是我一生中最榮耀、最美麗的時刻！',
+                media: 'bride.mp4'
+            },
+            2: {
+                name: '🤵 新郎 (Groom)',
+                text: '感謝村裡的爸爸媽媽們這幾天來幫忙籌備喜宴。',
+                media: 'groom.mp4'
+            },
+            // 你可以依照需求繼續補齊 3 到 10 的資料...
+            3: { name: '🧔 賓客 (Guest)', text: '這場婚宴太棒了！', media: '' },
+            4: { name: '🍷 管筵席的人', text: '大家都給我盯緊點！', media: '' },
+            5: { name: '🧑‍🍳 服侍的僕人', text: '呼，這工作真不輕鬆！', media: '' },
+            6: { name: '🏺 潔淨用石缸', text: '我是一顆沉重的灰石缸！', media: '' },
+            7: { name: '🪔 泥陶油燈', text: '雖然我個子小，但我站在高高的燈臺上喔！', media: '' },
+            8: { name: '🥖 器皿與食物', text: '我們是豐盛的無花果、葡萄！', media: '' },
+            9: { name: '🖼️ 額外圖片 9', text: '這是第 9 格的介紹。', media: '' },
+            10:{ name: '🖼️ 額外圖片 10', text: '這是第 10 格的介紹。', media: '' }
+        };
+
+        let typingInterval;
+
+        // 點擊 Frame 觸發對話框
+        function handleFrameClick(frameNumber) {
+            const data = frameData[frameNumber];
+            if (data) {
+                showDialog(data.name, data.text, data.media);
+            }
+        }
+
+        // === 以下完整保留你原有的對話框與打字機邏輯 ===
+
+        function showDialog(name, text, mediaSrc) {
+            resetMedia();
+            const dialogBox = document.getElementById('dialog-box');
+            document.getElementById('dialog-name').textContent = name;
+            document.getElementById('dialog-text').innerHTML = ""; 
+            
+            const mediaEl = document.getElementById('npc-media');
+            if (mediaSrc) {
+                mediaEl.src = mediaSrc;
+                mediaEl.classList.remove('hidden'); 
+                mediaEl.play().catch(e => console.log("需使用者互動後播放音訊:", e));
+            } else {
+                mediaEl.classList.add('hidden');
+                mediaEl.src = "";
+            }
+
+            dialogBox.classList.remove('translate-y-full');
+            typeWriterEffect(document.getElementById('dialog-text'), text);
+        }
+
+        function closeDialog() {
+            document.getElementById('dialog-box').classList.add('translate-y-full');
+            resetMedia();
+        }
+
+        function typeWriterEffect(element, text) {
+            let i = 0;
+            clearInterval(typingInterval);
+            const plainText = text.replace(/<[^>]*>?/gm, ''); 
+
+            typingInterval = setInterval(() => {
+                if (i < plainText.length) {
+                    element.textContent += plainText.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typingInterval);
+                }
+            }, 40); 
+        }
+
+        function resetMedia() {
+            clearInterval(typingInterval);
+            const mediaEl = document.getElementById('npc-media');
+            if (mediaEl) {
+                mediaEl.pause();
+                mediaEl.currentTime = 0;
+            }
+        }
+    </script>
+</body>
+</html>

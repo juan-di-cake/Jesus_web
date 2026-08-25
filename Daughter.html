@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fluid Grid Layout - Interactive</title>
     
-    <!-- 引入 Tailwind CSS 以支援對話框的樣式 -->
+    <!-- 引入 Tailwind CSS 以支援對話框與載入畫面的樣式 -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
@@ -31,7 +31,7 @@
             height: 100%;
             grid-template-columns: 382fr 111fr 565fr 382fr;
             grid-template-rows: 277fr 235fr 63fr 161fr 77fr 211fr;
-            gap: 2px; /* 框線間距，可自行調整 */
+            gap: 2px;
         }
 
         /* 共用 Frame 設定 */
@@ -41,25 +41,24 @@
             overflow: hidden;
             cursor: pointer;
             border-radius: 4px;
-            /* 對應原先 Lerp 動畫的流暢感 */
             transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
         }
 
-        /* 滑鼠移動效果 (Hover) - 參考原設定：放大15%、金色光暈 */
+        /* 滑鼠移動效果 (Hover) */
         .frame:hover {
-            transform: scale(1.05); /* 建議 DOM 元素放大 5~10% 較為自然，可依需求改為 1.15 */
+            transform: scale(1.05); 
             box-shadow: 0 0 25px rgba(250, 204, 21, 0.9);
             z-index: 10;
         }
 
-        /* 圖片與影片(Media)填滿 Frame 的設定 */
+        /* 圖片與影片填滿 Frame */
         .media-content {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             pointer-events: none; 
         }
 
@@ -78,67 +77,94 @@
 </head>
 <body class="bg-black text-gray-800">
 
-    <!-- Grid 主畫面 -->
-    <div class="grid-container" id="canvas-wrapper">
-        <div class="frame frame-1" onclick="handleFrameClick(1)">
-            <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/lady/少女.png" alt="Frame 1">
+    <!-- ================= 載入畫面 (全螢幕 Block) ================= -->
+    <div id="loading-screen" class="fixed inset-0 z-[200] bg-[#0a0a0a] flex flex-col items-center justify-center text-white transition-opacity duration-700 ease-in-out">
+        <div class="relative w-20 h-20 mb-6">
+            <div class="absolute inset-0 border-4 border-yellow-900/40 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-yellow-500 rounded-full border-t-transparent animate-spin"></div>
         </div>
-        <div class="frame frame-2" onclick="handleFrameClick(2)">
-            <img class="media-content" src="your-image-2.jpg" alt="Frame 2">
-        </div>
-        <div class="frame frame-3" onclick="handleFrameClick(3)">
-            <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/lady/少女.png" alt="Frame 3">
-        </div>
-        <div class="frame frame-4" onclick="handleFrameClick(4)">
-            <img class="media-content" src="your-image-4.jpg" alt="Frame 4">
-        </div>
-        <div class="frame frame-5" onclick="handleFrameClick(5)">
-            <img class="media-content" src="your-image-5.jpg" alt="Frame 5">
-        </div>
-        <div class="frame frame-6" onclick="handleFrameClick(6)">
-            <img class="media-content" src="your-image-6.jpg" alt="Frame 6">
-        </div>
-        <div class="frame frame-7" onclick="handleFrameClick(7)">
-            <img class="media-content" src="your-image-7.jpg" alt="Frame 7">
-        </div>
-        <div class="frame frame-8" onclick="handleFrameClick(8)">
-            <img class="media-content" src="your-image-8.jpg" alt="Frame 8">
-        </div>
-        <div class="frame frame-9" onclick="handleFrameClick(9)">
-            <img class="media-content" src="your-image-9.jpg" alt="Frame 9">
-        </div>
-        <div class="frame frame-10" onclick="handleFrameClick(10)">
-            <img class="media-content" src="your-image-10.jpg" alt="Frame 10">
-        </div>
+        <h2 class="text-3xl font-bold text-yellow-500 mb-3 tracking-widest drop-shadow-lg">畫面載入中</h2>
+        <p class="text-gray-400 text-lg font-medium tracking-wide">圖稿資源讀取進度... <span id="loading-progress" class="text-yellow-400">0%</span></p>
     </div>
 
-    <!-- === RPG 對話框 UI (完整保留你原本的設定) === -->
+    <!-- ================= Grid 主畫面 ================= -->
+    <div class="grid-container" id="canvas-wrapper">
+        <div class="frame frame-1" onclick="handleFrameClick(1)"><img class="media-content" src="Daughter/Jairus.png" alt="Frame 1"></div>
+        <div class="frame frame-2" onclick="handleFrameClick(2)"><img class="media-content" src="your-image-2.jpg" alt="Frame 2"></div>
+        <div class="frame frame-3" onclick="handleFrameClick(3)"><img class="media-content" src="Daughter/Lady.png" alt="Frame 3"></div>
+        <div class="frame frame-4" onclick="handleFrameClick(4)"><img class="media-content" src="Daughter/Meaning.png" alt="Frame 4"></div>
+        <div class="frame frame-5" onclick="handleFrameClick(5)"><img class="media-content" src="your-image-5.jpg" alt="Frame 5"></div>
+        <div class="frame frame-6" onclick="handleFrameClick(6)"><img class="media-content" src="your-image-6.jpg" alt="Frame 6"></div>
+        <div class="frame frame-7" onclick="handleFrameClick(7)"><img class="media-content" src="your-image-7.jpg" alt="Frame 7"></div>
+        <div class="frame frame-8" onclick="handleFrameClick(8)"><img class="media-content" src="your-image-8.jpg" alt="Frame 8"></div>
+        <div class="frame frame-9" onclick="handleFrameClick(9)"><img class="media-content" src="Daughter/Cultural.png" alt="Frame 9"></div>
+        <div class="frame frame-10" onclick="handleFrameClick(10)"><img class="media-content" src="Daughter/Aramaic.png" alt="Frame 10"></div>
+    </div>
+
+    <!-- ================= RPG 對話框 UI ================= -->
     <div id="dialog-box" class="absolute bottom-0 w-full bg-black/85 backdrop-blur-md border-t-4 border-yellow-600 text-white p-4 pb-6 shadow-2xl transition-transform duration-300 transform translate-y-full flex flex-col justify-center items-center pointer-events-auto z-50">
         <div class="w-full max-w-3xl relative">
             <div class="flex justify-between items-center mb-2">
                 <h3 id="dialog-name" class="text-yellow-400 font-bold text-xl drop-shadow">角色名稱</h3>
                 <button onclick="closeDialog()" class="text-gray-300 hover:text-white bg-white/20 rounded-full w-8 h-8 flex items-center justify-center text-lg absolute right-0 top-0">✕</button>
             </div>
-            
             <audio id="npc-media" class="hidden"></audio>
             <p id="dialog-text" class="text-lg leading-relaxed min-h-[3.5rem] pr-6">對話內容...</p>
         </div>
     </div>
 
     <script>
-        // 對應每個 frame 的資料設定 (替換原本的 hotspots 陣列)
+        // ================= 資源載入監控邏輯 =================
+        document.addEventListener("DOMContentLoaded", () => {
+            const images = document.querySelectorAll('.media-content');
+            const totalResources = images.length;
+            let loadedResources = 0;
+            const progressText = document.getElementById('loading-progress');
+            const loadingScreen = document.getElementById('loading-screen');
+
+            // 更新進度與隱藏載入畫面的函數
+            function updateProgress() {
+                let percent = Math.floor((loadedResources / totalResources) * 100);
+                progressText.textContent = `${percent}%`;
+
+                if (loadedResources >= totalResources) {
+                    setTimeout(() => {
+                        loadingScreen.classList.add('opacity-0');
+                        setTimeout(() => { 
+                            loadingScreen.style.display = 'none'; 
+                        }, 700); // 對應 tailwind 的 duration-700
+                    }, 300); // 讓 100% 稍微停留一下，視覺體驗較好
+                }
+            }
+
+            // 如果沒有圖片需要載入，直接隱藏
+            if (totalResources === 0) {
+                loadingScreen.style.display = 'none';
+            } else {
+                // 遍歷所有圖片，監聽載入事件
+                images.forEach(img => {
+                    if (img.complete) {
+                        loadedResources++;
+                        updateProgress();
+                    } else {
+                        img.addEventListener('load', () => {
+                            loadedResources++;
+                            updateProgress();
+                        });
+                        // 即使圖片路徑錯誤也視為載入完畢，避免卡在載入畫面
+                        img.addEventListener('error', () => {
+                            loadedResources++;
+                            updateProgress();
+                        });
+                    }
+                });
+            }
+        });
+
+        // ================= 對話框資料設定 =================
         const frameData = {
-            1: {
-                name: '👰 新娘 (Bride)',
-                text: '辦一場婚禮真的很辛苦呢！這是我一生中最榮耀、最美麗的時刻！',
-                media: 'bride.mp4'
-            },
-            2: {
-                name: '🤵 新郎 (Groom)',
-                text: '感謝村裡的爸爸媽媽們這幾天來幫忙籌備喜宴。',
-                media: 'groom.mp4'
-            },
-            // 你可以依照需求繼續補齊 3 到 10 的資料...
+            1: { name: '👰 新娘 (Bride)', text: '這是我一生中最榮耀、最美麗的時刻！', media: '' },
+            2: { name: '🤵 新郎 (Groom)', text: '感謝村裡的爸爸媽媽們這幾天來幫忙籌備喜宴。', media: '' },
             3: { name: '🧔 賓客 (Guest)', text: '這場婚宴太棒了！', media: '' },
             4: { name: '🍷 管筵席的人', text: '大家都給我盯緊點！', media: '' },
             5: { name: '🧑‍🍳 服侍的僕人', text: '呼，這工作真不輕鬆！', media: '' },
@@ -151,7 +177,7 @@
 
         let typingInterval;
 
-        // 點擊 Frame 觸發對話框
+        // 點擊事件
         function handleFrameClick(frameNumber) {
             const data = frameData[frameNumber];
             if (data) {
@@ -159,8 +185,7 @@
             }
         }
 
-        // === 以下完整保留你原有的對話框與打字機邏輯 ===
-
+        // 顯示對話框
         function showDialog(name, text, mediaSrc) {
             resetMedia();
             const dialogBox = document.getElementById('dialog-box');
@@ -181,11 +206,13 @@
             typeWriterEffect(document.getElementById('dialog-text'), text);
         }
 
+        // 關閉對話框
         function closeDialog() {
             document.getElementById('dialog-box').classList.add('translate-y-full');
             resetMedia();
         }
 
+        // 打字機特效
         function typeWriterEffect(element, text) {
             let i = 0;
             clearInterval(typingInterval);
@@ -201,6 +228,7 @@
             }, 40); 
         }
 
+        // 重置媒體
         function resetMedia() {
             clearInterval(typingInterval);
             const mediaEl = document.getElementById('npc-media');

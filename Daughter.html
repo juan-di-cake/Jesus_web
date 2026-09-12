@@ -22,29 +22,27 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden; 
-            background-color: #0b0907;
+            background-color: #000;
             font-family: 'Noto Serif TC', 'PingFang TC', serif;
             user-select: none;
             color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* 頂部標題列 */
-        .header-bar {
-            height: 48px;
-            background: linear-gradient(180deg, rgba(20, 15, 10, 0.95) 0%, rgba(10, 8, 5, 0.85) 100%);
-            border-bottom: 1px solid rgba(217, 163, 67, 0.35);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-        }
-
-        /* 主網格畫布容器 */
-        .canvas-area {
-            height: calc(100vh - 48px);
+        /* 滿版自適應等比畫布 (嚴格鎖定 16:9) */
+        .stage-container {
             width: 100vw;
-            padding: 6px;
+            height: 56.25vw; /* 100 * 9 / 16 */
+            max-height: 100vh;
+            max-width: 177.78vh; /* 100 * 16 / 9 */
+            position: relative;
             background: #0d0b09;
+            padding: 4px;
         }
 
-        /* 依原圖切分之流體網格佈局 */
+        /* 依原圖分割比例切分網格佈局 */
         .grid-container {
             display: grid;
             width: 100%;
@@ -60,74 +58,50 @@
             background: #1e1914;
             overflow: hidden;
             cursor: pointer;
-            border-radius: 6px;
-            border: 1px solid rgba(212, 163, 89, 0.2);
-            transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), 
-                        box-shadow 0.28s ease, 
-                        border-color 0.28s ease, 
+            border-radius: 4px;
+            border: 1px solid rgba(212, 163, 89, 0.25);
+            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                        box-shadow 0.25s ease, 
+                        border-color 0.25s ease, 
                         z-index 0s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
         }
 
-        /* 滑鼠 Hover 與選取回饋 */
+        /* 滑鼠 Hover 選取回饋 */
         .frame:hover {
-            transform: scale(1.025); 
+            transform: scale(1.018); 
             border-color: #f59e0b;
-            box-shadow: 0 0 22px rgba(245, 158, 11, 0.6), inset 0 0 12px rgba(245, 158, 11, 0.2);
-            z-index: 25;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6), inset 0 0 10px rgba(245, 158, 11, 0.25);
+            z-index: 30;
         }
 
         .frame:active {
             transform: scale(0.99);
         }
 
-        /* 懸浮提示角標 */
-        .frame-badge {
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            background: rgba(15, 10, 5, 0.82);
-            border: 1px solid rgba(245, 158, 11, 0.6);
-            color: #fbbf24;
-            padding: 2px 7px;
-            font-size: 11px;
-            font-weight: 700;
-            border-radius: 4px;
-            backdrop-filter: blur(4px);
-            opacity: 0.85;
-            transition: opacity 0.2s, background 0.2s;
-            pointer-events: none;
-            z-index: 5;
-        }
-        .frame:hover .frame-badge {
-            opacity: 1;
-            background: rgba(245, 158, 11, 0.95);
-            color: #111;
-        }
-
-        /* 圖片與媒體填滿 Frame */
+        /* 圖片填滿 Frame */
         .media-content {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: fill; /* 完全貼合網格預留比例 */
+            object-fit: fill; 
             pointer-events: none; 
-            transition: filter 0.3s ease;
+            transition: filter 0.25s ease;
         }
 
         .frame:hover .media-content {
-            filter: brightness(1.05) contrast(1.02);
+            filter: brightness(1.04) contrast(1.02);
         }
 
-        /* 網格區塊對應定位 (嚴格符合九宮/十格拆解) */
+        /* 精確網格格位對應 (九宮/十格完整排版) */
         .frame-1  { grid-area: 1 / 1 / 2 / 2; } /* 1. 睚魯是誰？ */
-        .frame-3  { grid-area: 2 / 1 / 3 / 2; } /* 2. 十二歲的女孩 */
-        .frame-2  { grid-area: 3 / 1 / 5 / 3; } /* 3. 猶太人的喪葬文化 */
+        .frame-3  { grid-area: 2 / 1 / 3 / 2; } /* 2. 十二歲女孩 */
+        .frame-2  { grid-area: 3 / 1 / 5 / 3; } /* 3. 喪葬文化 */
         .frame-4  { grid-area: 5 / 1 / 7 / 3; } /* 4. 耶穌觸摸死人，有何意義？ */
         .frame-8  { grid-area: 1 / 2 / 3 / 4; } /* 耶穌與女孩主圖 */
-        .frame-5  { grid-area: 3 / 3 / 6 / 4; } /* 5. 第一世紀加利利住宅 */
+        .frame-5  { grid-area: 3 / 3 / 6 / 4; } /* 5. 加利利住宅 */
         .frame-6  { grid-area: 6 / 3 / 7 / 5; } /* 9. 房間與家具細節 */
         .frame-10 { grid-area: 1 / 4 / 2 / 5; } /* 6. 亞蘭文：「大利大，古米！」 */
         .frame-9  { grid-area: 2 / 4 / 4 / 5; } /* 7. 考古發現的相關文物 */
@@ -158,106 +132,76 @@
         }
     </style>
 </head>
-<body class="bg-[#0b0907]">
+<body>
 
-    <!-- ================= 頂部資訊標題列 ================= -->
-    <header class="header-bar px-4 flex items-center justify-between text-amber-100 z-30 relative">
-        <div class="flex items-center space-x-3">
-            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_#f59e0b]"></span>
-            <h1 class="text-base sm:text-lg font-bold tracking-wider text-amber-300 drop-shadow flex items-center gap-2">
-                <span>睚魯女兒的神蹟：背景文化細節圖解</span>
-            </h1>
-            <span class="hidden md:inline-block text-xs bg-amber-950/80 text-amber-300 px-2 py-0.5 rounded border border-amber-600/40">
-                可 5:21-43 ｜ 太 9:18-26 ｜ 路 8:40-56
-            </span>
-        </div>
-        <div class="flex items-center space-x-2 text-xs text-amber-200/80">
-            <span class="hidden sm:inline">💡 點擊任一圖格，深入解鎖歷史背景與經文意涵</span>
-            <button onclick="toggleAudioFx()" id="audio-toggle-btn" class="px-2.5 py-1 bg-amber-950/70 hover:bg-amber-900 border border-amber-700/50 rounded text-amber-300 transition text-xs flex items-center gap-1">
-                <span id="audio-icon">🔔</span> 互動音效：<span id="audio-status">開</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- ================= 載入畫面 (全螢幕 Block) ================= -->
+    <!-- ================= 載入畫面 ================= -->
     <div id="loading-screen" class="fixed inset-0 z-[200] bg-[#0c0a08] flex flex-col items-center justify-center text-white transition-opacity duration-500 ease-in-out">
-        <div class="relative w-16 h-16 mb-4">
+        <div class="relative w-14 h-14 mb-3">
             <div class="absolute inset-0 border-4 border-amber-900/30 rounded-full"></div>
             <div class="absolute inset-0 border-4 border-amber-500 rounded-full border-t-transparent animate-spin"></div>
         </div>
-        <h2 class="text-2xl font-bold text-amber-400 mb-2 tracking-widest drop-shadow-md">載入歷史圖稿資源</h2>
-        <p class="text-amber-200/60 text-sm font-medium tracking-wide">考據細節讀取進度... <span id="loading-progress" class="text-amber-400 font-bold">0%</span></p>
+        <h2 class="text-xl font-bold text-amber-400 mb-1 tracking-widest drop-shadow-md">載入歷史圖稿資源</h2>
+        <p class="text-amber-200/60 text-xs font-medium tracking-wide">考據細節讀取中... <span id="loading-progress" class="text-amber-400 font-bold">0%</span></p>
     </div>
 
-    <!-- ================= Grid 主畫面 (10個 Frame，保留原 src) ================= -->
-    <main class="canvas-area">
+    <!-- ================= 核心等比視窗 ================= -->
+    <div class="stage-container">
         <div class="grid-container" id="canvas-wrapper">
             <!-- 1. 睚魯是誰？ -->
             <div class="frame frame-1" onclick="handleFrameClick(1)" title="1. 睚魯是誰？">
-                <span class="frame-badge">1. 睚魯是誰？</span>
                 <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Jairus.png" alt="1. 睚魯是誰？" onerror="handleImgFallback(this, '1. 睚魯是誰？\n會堂主管')">
             </div>
+
             <!-- 3. 猶太人的喪葬文化 -->
             <div class="frame frame-2" onclick="handleFrameClick(2)" title="3. 猶太人的喪葬文化">
-                <span class="frame-badge">3. 喪葬文化</span>
                 <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Culture.png" alt="3. 猶太人的喪葬文化" onerror="handleImgFallback(this, '3. 猶太人的喪葬文化\n吹笛與哭喪')">
             </div>
 
             <!-- 2. 十二歲的女孩 -->
             <div class="frame frame-3" onclick="handleFrameClick(3)" title="2. 十二歲的女孩">
-                <span class="frame-badge">2. 十二歲女孩</span>
                 <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Girl.png" alt="2. 十二歲的女孩" onerror="handleImgFallback(this, '2. 十二歲的女孩\n家庭與社會地位')">
             </div>
 
             <!-- 4. 耶穌觸摸死人，有何意義？ -->
             <div class="frame frame-4" onclick="handleFrameClick(4)" title="4. 耶穌觸摸死人，有何意義？">
-                <span class="frame-badge">4. 觸摸死人意義</span>
                 <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Meaning.png" alt="4. 耶穌觸摸死人，有何意義？" onerror="handleImgFallback(this, '4. 耶穌觸摸死人，有何意義？\n勝過死亡與律法')">
             </div>
 
             <!-- 5. 第一世紀加利利住宅 -->
             <div class="frame frame-5" onclick="handleFrameClick(5)" title="5. 第一世紀加利利住宅">
-                <span class="frame-badge">5. 加利利住宅</span>
                 <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/House.png" alt="5. 第一世紀加利利住宅" onerror="handleImgFallback(this, '5. 第一世紀加利利住宅\n富裕人家建築結構')">
             </div>
 
             <!-- 9. 房間與家具細節 -->
             <div class="frame frame-6" onclick="handleFrameClick(6)" title="9. 房間與家具細節">
-                <span class="frame-badge">9. 房間與家具細節</span>
                 <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Furniture.png" alt="9. 房間與家具細節" onerror="handleImgFallback(this, '9. 房間與家具細節\n木床、油燈、低桌、木箱')">
             </div>
 
             <!-- 8. 舊約律法與背景 -->
             <div class="frame frame-7" onclick="handleFrameClick(7)" title="8. 舊約律法與背景">
-                <span class="frame-badge">8. 舊約律法與背景</span>
                 <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Back7.png" alt="8. 舊約律法與背景" onerror="handleImgFallback(this, '8. 舊約律法與背景\n潔淨禮儀與生命')">
             </div>
 
             <!-- 耶穌使女孩復活 (核心神蹟畫面) -->
             <div class="frame frame-8" onclick="handleFrameClick(8)" title="神蹟主圖：大利大，古米！">
-                <span class="frame-badge">✨ 耶穌使女孩復活</span>
                 <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/JesusAndGirl.png" alt="耶穌使女孩復活" onerror="handleImgFallback(this, '神蹟時刻：\n耶穌拉著女孩的手說：大利大，古米！')">
             </div>
 
             <!-- 7. 考古發現的相關文物 -->
             <div class="frame frame-9" onclick="handleFrameClick(9)" title="7. 考古發現的相關文物">
-                <span class="frame-badge">7. 考古文物</span>
                 <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Thing.png" alt="7. 考古發現的相關文物" onerror="handleImgFallback(this, '7. 考古發現的相關文物\n油燈、陶罐、石碗、經卷')">
             </div>
 
             <!-- 6. 亞蘭文：「大利大，古米！」 -->
             <div class="frame frame-10" onclick="handleFrameClick(10)" title="6. 亞蘭文：大利大，古米！">
-                <span class="frame-badge">6. 亞蘭文語錄</span>
                 <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Aramaic.png" alt="6. 亞蘭文：大利大，古米！" onerror="handleImgFallback(this, '6. 亞蘭文：大利大，古米！\nTalitha Koum')">
             </div>
         </div>
-    </main>
+    </div>
 
-    <!-- ================= RPG 對話框 / 深度導覽 UI ================= -->
+    <!-- ================= 點擊說明彈出框 ================= -->
     <div id="dialog-box" class="fixed bottom-0 left-0 w-full bg-[#14100c]/95 backdrop-blur-md border-t-2 border-amber-500/80 text-amber-50 p-4 sm:p-5 shadow-[0_-10px_35px_rgba(0,0,0,0.85)] transition-transform duration-300 ease-out transform translate-y-full z-50">
         <div class="max-w-4xl mx-auto relative">
-            
-            <!-- 對話框頂部：主題標籤與關閉鈕 -->
             <div class="flex justify-between items-start mb-2 border-b border-amber-900/60 pb-2">
                 <div class="flex items-center gap-3">
                     <span id="dialog-tag" class="px-2.5 py-0.5 text-xs font-bold bg-amber-500 text-black rounded uppercase tracking-wider">歷史考據</span>
@@ -273,18 +217,16 @@
                 </div>
             </div>
 
-            <!-- 內建音訊元件 (保留支援外部 media) -->
+            <!-- 內建音訊元件 -->
             <audio id="npc-media" class="hidden"></audio>
 
-            <!-- 導覽解說內容 (支援打字機特效) -->
-            <div class="min-h-[4rem] text-sm sm:text-base leading-relaxed text-stone-200">
+            <!-- 導覽解說內容 -->
+            <div class="min-h-[3.5rem] text-sm sm:text-base leading-relaxed text-stone-200">
                 <p id="dialog-text" class="typing-cursor inline"></p>
             </div>
 
-            <!-- 重點整理或經文徽章列 -->
-            <div id="dialog-extra" class="mt-3 pt-2 border-t border-amber-900/40 flex flex-wrap gap-2 text-xs text-amber-300/90">
-                <!-- 動態注入重點條目 -->
-            </div>
+            <!-- 重點標籤列 -->
+            <div id="dialog-extra" class="mt-3 pt-2 border-t border-amber-900/40 flex flex-wrap gap-2 text-xs text-amber-300/90"></div>
         </div>
     </div>
 
@@ -305,10 +247,8 @@
                 if (loadedResources >= totalResources) {
                     setTimeout(() => {
                         loadingScreen.classList.add('opacity-0');
-                        setTimeout(() => { 
-                            loadingScreen.style.display = 'none'; 
-                        }, 500);
-                    }, 250);
+                        setTimeout(() => { loadingScreen.style.display = 'none'; }, 400);
+                    }, 200);
                 }
             }
 
@@ -325,16 +265,14 @@
                 });
             }
 
-            // 安全超時：若資源卡住3秒後自動進入主畫面
             setTimeout(() => {
                 if (loadingScreen.style.display !== 'none') {
                     loadingScreen.classList.add('opacity-0');
-                    setTimeout(() => { loadingScreen.style.display = 'none'; }, 500);
+                    setTimeout(() => { loadingScreen.style.display = 'none'; }, 400);
                 }
             }, 3000);
         });
 
-        // 圖片載入失敗時的優雅文字 Fallback
         function handleImgFallback(imgElement, fallbackText) {
             const parent = imgElement.parentElement;
             imgElement.style.display = 'none';
@@ -347,7 +285,6 @@
         }
 
         // ================= 2. 考據主題與對話內容數據庫 =================
-        // 對應 10 個 Frame 的深度歷史背景與屬靈意義
         const frameData = {
             1: {
                 tag: "人物角色",
@@ -398,13 +335,13 @@
                 points: ["猶太潔淨條例深植於日常信仰中", "耶穌不是破壞律法，乃是成全並超越律法", "宣告上帝國度勝過死亡與罪惡的主權"],
                 media: 'https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Voice/Law.m4a'
             },
-            // 8: {
-            //     tag: "神蹟核心",
-            //     name: "✨ 耶穌使女孩復活（核心神蹟時刻）",
-            //     text: "耶穌進入內室，吩咐旁人不要喧嚷哀哭，只帶著彼得、雅各、約翰與女孩的父母進去。祂拉著女孩冰冷的小手，以最溫柔而滿有權柄的聲音呼喚：『大利大，古米！』女孩的靈魂立刻回到身體，張開雙眼起來行走。耶穌更細心吩咐眾人拿食物給她吃，顯出祂對生命最細膩的看顧。",
-            //     points: ["『不要怕，只要信！』堅固父母的信心", "拉著女孩的手，溫柔彰顯造物主的權能", "女孩立刻起來行走，眾人大大驚奇"],
-            //     media: 'https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Voice/Jairus.m4a'
-            // },
+            8: {
+                tag: "神蹟核心",
+                name: "✨ 耶穌使女孩復活（核心神蹟時刻）",
+                text: "耶穌進入內室，吩咐旁人不要喧嚷哀哭，只帶著彼得、雅各、約翰與女孩的父母進去。祂拉著女孩冰冷的小手，以最溫柔而滿有權柄的聲音呼喚：『大利大，古米！』女孩的靈魂立刻回到身體，張開雙眼起來行走。耶穌更細心吩咐眾人拿食物給她吃，顯出祂對生命最細膩的看顧。",
+                points: ["『不要怕，只要信！』堅固父母的信心", "拉著女孩的手，溫柔彰顯造物主的權能", "女孩立刻起來行走，眾人大大驚奇"],
+                media: 'https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Voice/Jesus.m4a'
+            },
             9: {
                 tag: "考古實證",
                 name: "7. 考古發現的相關文物（第一世紀）",
@@ -421,54 +358,17 @@
             }
         };
 
-        // ================= 3. 互動對話控制與音效邏輯 =================
+        // ================= 3. 互動對話控制 =================
         let typingInterval = null;
         let currentFullText = "";
-        let audioFxEnabled = true;
-        let audioCtx = null;
 
-        // 簡易 Web Audio API 提示音 (無需外部音檔)
-        function playChime(freq = 587.33, type = "sine") {
-            if (!audioFxEnabled) return;
-            try {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.35);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.35);
-            } catch (e) {
-                console.log("Audio not allowed yet:", e);
-            }
-        }
-
-        function toggleAudioFx() {
-            audioFxEnabled = !audioFxEnabled;
-            document.getElementById('audio-status').textContent = audioFxEnabled ? "開" : "關";
-            document.getElementById('audio-icon').textContent = audioFxEnabled ? "🔔" : "🔕";
-            if (audioFxEnabled) playChime(659.25);
-        }
-
-        // 點擊 Frame 觸發
         function handleFrameClick(frameNumber) {
-            playChime(523.25 + frameNumber * 25);
             const data = frameData[frameNumber];
             if (data) {
                 showDialog(data.tag, data.name, data.text, data.points, data.media);
             }
         }
 
-        // 顯示對話框
         function showDialog(tag, name, text, points = [], mediaSrc = '') {
             resetMedia();
             const dialogBox = document.getElementById('dialog-box');
@@ -479,7 +379,6 @@
             dialogTextEl.textContent = ""; 
             currentFullText = text;
 
-            // 渲染重點標籤列
             const extraContainer = document.getElementById('dialog-extra');
             extraContainer.innerHTML = '';
             if (points && points.length > 0) {
@@ -491,7 +390,6 @@
                 });
             }
 
-            // 支援外部音訊
             const mediaEl = document.getElementById('npc-media');
             if (mediaSrc) {
                 mediaEl.src = mediaSrc;
@@ -502,19 +400,15 @@
                 mediaEl.src = "";
             }
 
-            // 滑出對話框
             dialogBox.classList.remove('translate-y-full');
             typeWriterEffect(dialogTextEl, text);
         }
 
-        // 關閉對話框
         function closeDialog() {
             document.getElementById('dialog-box').classList.add('translate-y-full');
             resetMedia();
-            playChime(392.00);
         }
 
-        // 跳過打字機直接展開全文
         function skipTyping() {
             clearInterval(typingInterval);
             const dialogTextEl = document.getElementById('dialog-text');
@@ -522,7 +416,6 @@
             dialogTextEl.classList.remove('typing-cursor');
         }
 
-        // 打字機特效
         function typeWriterEffect(element, text) {
             let i = 0;
             clearInterval(typingInterval);
@@ -536,10 +429,9 @@
                     clearInterval(typingInterval);
                     element.classList.remove('typing-cursor');
                 }
-            }, 22); 
+            }, 20); 
         }
 
-        // 重置媒體與定時器
         function resetMedia() {
             clearInterval(typingInterval);
             const mediaEl = document.getElementById('npc-media');
@@ -549,7 +441,6 @@
             }
         }
 
-        // 鍵盤快捷鍵：ESC 關閉對話框、空白鍵展開全文
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeDialog();

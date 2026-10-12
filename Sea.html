@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>平靜風和海：考古與細節統整表</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Noto+Serif+TC:wght@500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Noto Serif TC', 'PingFang TC', serif;
+            user-select: none;
+            color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .stage-container {
+            aspect-ratio: 1024 / 572;
+            width: min(100vw, calc(100vh * 1024 / 572));
+            position: relative;
+            background: #0d0b09;
+        }
+        .poster {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            pointer-events: none;
+        }
+        .hotspot {
+            position: absolute;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 0;
+        }
+        .hotspot:hover,
+        .hotspot:focus-visible {
+            border-color: #f59e0b;
+            box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.45), 0 0 18px rgba(245, 158, 11, 0.55);
+            outline: none;
+        }
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 0.8s infinite;
+            color: #f59e0b;
+            font-weight: 900;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen" class="fixed inset-0 z-[200] bg-[#0c0a08] flex flex-col items-center justify-center text-white transition-opacity duration-500 ease-in-out">
+        <div class="relative w-14 h-14 mb-3">
+            <div class="absolute inset-0 border-4 border-amber-900/30 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-amber-500 rounded-full border-t-transparent animate-spin"></div>
+        </div>
+        <h2 class="text-xl font-bold text-amber-400 mb-1 tracking-widest drop-shadow-md">平靜風和海</h2>
+        <p class="text-amber-200/60 text-xs font-medium tracking-wide">馬可福音 4:35-41　<span id="loading-progress" class="text-amber-400 font-bold">0%</span></p>
+    </div>
+
+    <div class="stage-container" id="stage">
+        <img id="poster" class="poster" src="assets/sea/poster.png" alt="平靜風和海：考古與細節統整表">
+        <button class="hotspot" style="left:0.8%;top:22.2%;width:23.8%;height:17.0%;" data-frame="1" title="1. 加利利湖：地理與特色"></button>
+        <button class="hotspot" style="left:0.8%;top:39.6%;width:23.8%;height:28.2%;" data-frame="2" title="2. 為何常有致命暴風？"></button>
+        <button class="hotspot" style="left:0.7%;top:68.6%;width:18.6%;height:22.4%;" data-frame="3" title="3. 漁業與經濟命脈"></button>
+        <button class="hotspot" style="left:73.2%;top:3.2%;width:26.0%;height:21.8%;" data-frame="4" title="4. 角色服裝與打扮"></button>
+        <button class="hotspot" style="left:73.2%;top:25.4%;width:26.0%;height:20.4%;" data-frame="5" title="5. 舊約背景：只有神能掌管海"></button>
+        <button class="hotspot" style="left:73.2%;top:46.2%;width:26.0%;height:21.8%;" data-frame="6" title="6. 耶穌的權柄"></button>
+        <button class="hotspot" style="left:20.2%;top:68.6%;width:18.6%;height:22.4%;" data-frame="7" title="7. 船上角色分工與狀態"></button>
+        <button class="hotspot" style="left:40.0%;top:68.6%;width:18.8%;height:22.4%;" data-frame="8" title="8. 第一世紀加利利漁船"></button>
+        <button class="hotspot" style="left:59.8%;top:68.6%;width:18.8%;height:22.4%;" data-frame="9" title="9. 船隻裝備與實物道具"></button>
+        <button class="hotspot" style="left:79.6%;top:68.6%;width:19.6%;height:22.4%;" data-frame="10" title="10. 相關考古小知識"></button>
+    </div>
+
+    <div id="dialog-box" class="fixed bottom-0 left-0 w-full bg-[#14100c]/95 backdrop-blur-md border-t-2 border-amber-500/80 text-amber-50 p-4 sm:p-5 shadow-[0_-10px_35px_rgba(0,0,0,0.85)] transition-transform duration-300 ease-out transform translate-y-full z-50">
+        <div class="max-w-4xl mx-auto relative">
+            <div class="flex justify-between items-start mb-2 border-b border-amber-900/60 pb-2">
+                <div class="flex items-center gap-3">
+                    <span id="dialog-tag" class="px-2.5 py-0.5 text-xs font-bold bg-amber-500 text-black rounded tracking-wider">地理</span>
+                    <h3 id="dialog-name" class="text-amber-300 font-bold text-lg sm:text-xl tracking-wide drop-shadow">主題名稱</h3>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="skipTyping()" id="skip-btn" class="text-xs text-amber-400/80 hover:text-amber-300 bg-amber-950/60 px-2 py-1 rounded border border-amber-700/40 transition">展開全文</button>
+                    <button onclick="closeDialog()" class="text-amber-300/70 hover:text-amber-100 bg-amber-900/40 hover:bg-amber-800/80 rounded-full w-7 h-7 flex items-center justify-center text-sm transition">✕</button>
+                </div>
+            </div>
+            <audio id="npc-media" class="hidden"></audio>
+            <div class="min-h-[3.5rem] text-sm sm:text-base leading-relaxed text-stone-200">
+                <p id="dialog-text" class="typing-cursor inline"></p>
+            </div>
+            <div id="dialog-extra" class="mt-3 pt-2 border-t border-amber-900/40 flex flex-wrap gap-2 text-xs text-amber-300/90"></div>
+        </div>
+    </div>
+
+    <script>
+        const frameData = {
+            1: {
+                tag: "地理",
+                name: "1. 加利利湖：地理與特色",
+                text: "加利利湖位於以色列北部，面積約166平方公里。它是低於海平面210公尺的最低淡水湖，也是第一世紀重要的交通要道。",
+                points: ["伯賽大", "迦百農", "提比哩亞", "隱及迪", "Sea of Galilee"],
+                media: "assets/sea/Voice/galilee.m4a"
+            },
+            2: {
+                tag: "氣象",
+                name: "2. 為何常有致命暴風？",
+                text: "這裡常發生致命暴風，是因為湖面四周高山環繞，形成「漏斗狀風道」。當黑門山的冷空氣與湖面的暖濕空氣劇烈交會時，就會突然掀起狂風暴雨。",
+                points: ["冷空氣（黑門山）", "漏斗狀風道", "暖濕空氣", "致命暴風"],
+                media: "assets/sea/Voice/weather.m4a"
+            },
+            3: {
+                tag: "經濟",
+                name: "3. 漁業與經濟命脈",
+                text: "捕魚業是一世紀的經濟中心，門徒們本就非常熟悉湖象。連這群專業漁夫都感到驚恐，可見這場風暴異常駭人。",
+                points: ["捕魚業是一世紀經濟中心", "門徒熟知湖象"],
+                media: "assets/sea/Voice/economy.m4a"
+            },
+            4: {
+                tag: "服裝",
+                name: "4. 角色服裝與打扮",
+                text: "畫中耶穌穿著長袍；而門徒們則是穿著粗糙的無袖短袍，這是為了方便他們在船上攀舵與舀水等勞動。",
+                points: ["耶穌長袍", "漁夫短袍"],
+                media: "assets/sea/Voice/clothing.m4a"
+            },
+            5: {
+                tag: "舊約",
+                name: "5. 舊約背景：只有神能掌管海",
+                text: "在古代近東文化中，深海象徵著混亂與死亡。舊約的《詩篇》與《約伯記》都記載著，唯有神能夠「管轄海的狂傲」。",
+                points: ["詩篇 89:9", "約伯記 38:8-11"],
+                media: "assets/sea/Voice/old_testament.m4a"
+            },
+            6: {
+                tag: "權柄",
+                name: "6. 耶穌的權柄",
+                text: "呼應前面的背景，耶穌平息風暴不需要任何儀式或咒語。祂僅憑一句「住了吧！靜了吧！」就讓自然界順服，這顯明了祂超越人類、等同於神的權柄。",
+                points: ["住了吧！靜了吧！"],
+                media: "assets/sea/Voice/authority.m4a"
+            },
+            7: {
+                tag: "船上",
+                name: "7. 船上角色分工與狀態",
+                text: "在風暴的混亂中，船上每個人狀態不同：有人努力保持船頭穩定，有人拚命舀水，還有人驚慌求救，絕望地搖醒耶穌。",
+                points: ["掌舵者", "舀水者", "驚慌求救者"],
+                media: "assets/sea/Voice/roles.m4a"
+            },
+            8: {
+                tag: "船隻",
+                name: "8. 第一世紀加利利漁船",
+                text: "根據1986年的考古發現，這是一艘長8.2公尺、寬2.3公尺的船隻，大約可容納13到15人。它的平底設計雖適合淺水捕魚，但在狂風中卻極容易翻覆。",
+                points: ["1986 Discovery", "長 8.2 公尺", "寬 2.3 公尺", "容納 13–15 人"],
+                media: "assets/sea/Voice/fishing_boat.m4a"
+            },
+            9: {
+                tag: "裝備",
+                name: "9. 船隻裝備與實物道具",
+                text: "這艘船配有單桅帆與四支木槳。特別的是，聖經記載耶穌熟睡時墊的枕頭，其實是當時漁船船尾甲板下的沙袋或皮墊。",
+                points: ["單桅帆", "四支木槳", "船尾沙袋枕頭"],
+                media: "assets/sea/Voice/boat_props.m4a"
+            },
+            10: {
+                tag: "考古",
+                name: "10. 相關考古小知識",
+                text: "這裡展示了加利利出土的一世紀文物，包含陶製油燈、石錨、漁網鉛錘與木製船槳，真實還原了當時水手與漁夫的生活工具。",
+                points: ["陶製油燈", "石錨", "漁網鉛錘", "木製船槳"],
+                media: "assets/sea/Voice/fun_facts.m4a"
+            }
+        };
+
+        const poster = document.getElementById("poster");
+        const progressText = document.getElementById("loading-progress");
+        const loadingScreen = document.getElementById("loading-screen");
+
+        function finishLoading() {
+            progressText.textContent = "100%";
+            loadingScreen.classList.add("opacity-0");
+            setTimeout(() => { loadingScreen.style.display = "none"; }, 400);
+        }
+
+        if (poster.complete && poster.naturalWidth !== 0) {
+            finishLoading();
+        } else {
+            progressText.textContent = "40%";
+            poster.addEventListener("load", finishLoading);
+            poster.addEventListener("error", finishLoading);
+        }
+
+        let typingInterval = null;
+        let currentFullText = "";
+
+        document.querySelectorAll(".hotspot").forEach((button) => {
+            button.addEventListener("click", () => {
+                const data = frameData[button.dataset.frame];
+                if (data) showDialog(data.tag, data.name, data.text, data.points, data.media);
+            });
+        });
+
+        function showDialog(tag, name, text, points = [], mediaSrc = "") {
+            resetMedia();
+            const dialogBox = document.getElementById("dialog-box");
+            document.getElementById("dialog-tag").textContent = tag || "考據";
+            document.getElementById("dialog-name").textContent = name;
+            const dialogTextEl = document.getElementById("dialog-text");
+            dialogTextEl.textContent = "";
+            currentFullText = text;
+
+            const extraContainer = document.getElementById("dialog-extra");
+            extraContainer.innerHTML = "";
+            points.forEach((pt) => {
+                const badge = document.createElement("span");
+                badge.className = "bg-amber-950/80 text-amber-200 border border-amber-700/50 px-2 py-0.5 rounded text-xs";
+                badge.textContent = `✦ ${pt}`;
+                extraContainer.appendChild(badge);
+            });
+
+            const mediaEl = document.getElementById("npc-media");
+            mediaEl.onerror = () => {
+                mediaEl.removeAttribute("src");
+                mediaEl.classList.add("hidden");
+            };
+            if (mediaSrc) {
+                mediaEl.src = mediaSrc;
+                mediaEl.classList.add("hidden");
+                mediaEl.play().catch(() => {});
+            } else {
+                mediaEl.classList.add("hidden");
+                mediaEl.removeAttribute("src");
+            }
+
+            dialogBox.classList.remove("translate-y-full");
+            typeWriterEffect(dialogTextEl, text);
+        }
+
+        function closeDialog() {
+            document.getElementById("dialog-box").classList.add("translate-y-full");
+            resetMedia();
+        }
+
+        function skipTyping() {
+            clearInterval(typingInterval);
+            const dialogTextEl = document.getElementById("dialog-text");
+            dialogTextEl.textContent = currentFullText;
+            dialogTextEl.classList.remove("typing-cursor");
+        }
+
+        function typeWriterEffect(element, text) {
+            let i = 0;
+            clearInterval(typingInterval);
+            element.classList.add("typing-cursor");
+            typingInterval = setInterval(() => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typingInterval);
+                    element.classList.remove("typing-cursor");
+                }
+            }, 20);
+        }
+
+        function resetMedia() {
+            clearInterval(typingInterval);
+            const mediaEl = document.getElementById("npc-media");
+            if (!mediaEl) return;
+            mediaEl.pause();
+            try { mediaEl.currentTime = 0; } catch (e) {}
+        }
+
+        document.addEventListener("keydown", (e) => {
+            const dialogBox = document.getElementById("dialog-box");
+            if (e.key === "Escape") {
+                closeDialog();
+            } else if (e.key === " " && !dialogBox.classList.contains("translate-y-full")) {
+                e.preventDefault();
+                skipTyping();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -66,55 +66,58 @@
             color: #5c4030;
         }
 
-        .board {
+        .board-slot {
             flex: 1 1 auto;
             min-height: 0;
+            container-type: size;
+            display: grid;
+            place-items: center;
+        }
+
+        .board {
+            width: min(100cqw, calc(100cqh * 514 / 335));
+            height: min(100cqh, calc(100cqw * 335 / 514));
             display: flex;
             flex-direction: column;
-            gap: 0.55%;
+            gap: 0.45cqw;
         }
 
         .top-row {
-            flex: 2.25 1 0;
+            flex: 2157 1 0;
             min-height: 0;
             display: grid;
-            grid-template-columns: 0.74fr 1.62fr 0.74fr;
-            gap: 0.55%;
+            grid-template-columns: 100fr 302fr 112fr;
+            gap: 0.4cqw;
         }
 
         .stack {
             min-height: 0;
             display: flex;
             flex-direction: column;
-            gap: 0.7%;
+            gap: 0.4cqw;
         }
 
         .stack .frame { flex: 1 1 0; min-height: 0; }
-        .stack .frame[data-frame="1"] { flex-grow: 1.45; }
-        .stack .frame[data-frame="2"] { flex-grow: 1.2; }
-        .stack .frame[data-frame="3"] { flex-grow: 0.95; }
-        .stack .frame[data-frame="8"] { flex-grow: 0.92; }
-        .stack .frame[data-frame="9"] { flex-grow: 1.08; }
-        .stack .frame[data-frame="10"] { flex-grow: 0.8; }
+        .stack .frame[data-frame="1"] { flex-grow: 892; }
+        .stack .frame[data-frame="2"] { flex-grow: 690; }
+        .stack .frame[data-frame="3"] { flex-grow: 575; }
+        .stack .frame[data-frame="8"] { flex-grow: 710; }
+        .stack .frame[data-frame="9"] { flex-grow: 827; }
+        .stack .frame[data-frame="10"] { flex-grow: 620; }
 
         .bottom-row {
-            flex: 1.12 1 0;
+            flex: 1190 1 0;
             min-height: 0;
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 0.55%;
+            grid-template-columns: 963fr 877fr 884fr 950fr 1466fr;
+            gap: 0.4cqw;
         }
 
         .center-tray {
             min-height: 0;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.8%;
-            padding: 1.2%;
-            background:
-                linear-gradient(180deg, rgba(255, 250, 238, 0.45), rgba(232, 210, 170, 0.2));
-            border: 1px solid rgba(92, 58, 20, 0.28);
-            border-radius: 6px;
+            grid-template-columns: 145fr 157fr;
+            gap: 0.4cqw;
         }
 
         .frame {
@@ -125,20 +128,17 @@
             border-radius: 6px;
             border: 1px solid rgba(92, 58, 20, 0.32);
             box-shadow: 0 1px 3px rgba(58, 36, 21, 0.12);
-            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        box-shadow 0.25s ease,
-                        border-color 0.25s ease;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
         .frame:hover,
-        .frame.is-selected {
-            transform: scale(1.018);
+        .frame.is-selected,
+        .frame:focus-visible {
             border-color: #d4920a;
-            box-shadow: 0 0 16px rgba(212, 146, 10, 0.55), inset 0 0 0 1px rgba(212, 146, 10, 0.45);
+            box-shadow: 0 0 0 2px rgba(212, 146, 10, 0.85);
             z-index: 5;
+            outline: none;
         }
-
-        .frame:active { transform: scale(0.992); }
 
         .media-content {
             position: absolute;
@@ -237,6 +237,13 @@
         }
 
         [hidden] { display: none !important; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .frame,
+            #dialog-box,
+            #loading-screen { transition: none; }
+            .typing-cursor::after { animation: none; }
+        }
     </style>
 </head>
 <body>
@@ -252,6 +259,7 @@
             <p>路加福音 19:1-10 耶利哥是通往約旦河東的交通要道，富饒的香脂與沿途貿易使此地繁榮，也造就了稅吏的出現與爭議。</p>
         </header>
 
+        <div class="board-slot">
         <div class="board">
             <div class="top-row">
                 <div class="stack">
@@ -313,11 +321,12 @@
                 </div>
             </div>
         </div>
+        </div>
 
         <footer class="footnote">核心信息：耶穌來，尋找並拯救失喪的人。祂超越人們的偏見，進入撒該的生命，帶來改變與更新。</footer>
     </div>
 
-    <div id="dialog-box" style="position:fixed;left:0;bottom:0;width:100%;background:rgba(20,16,12,.95);border-top:2px solid rgba(245,158,11,.8);color:#fffbeb;padding:1rem 1.15rem 1.15rem;box-shadow:0 -10px 35px rgba(0,0,0,.85);transform:translateY(110%);transition:transform .3s ease;z-index:50;">
+    <div id="dialog-box" style="position:fixed;left:0;bottom:0;width:100%;background:#16110c;border-top:2px solid rgba(245,158,11,.8);color:#fffbeb;padding:1rem 1.15rem 1.15rem;box-shadow:0 -10px 35px rgba(0,0,0,.85);transform:translateY(110%);transition:transform .3s ease;z-index:50;">
         <div style="max-width:56rem;margin:0 auto;">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;margin-bottom:.5rem;padding-bottom:.45rem;border-bottom:1px solid rgba(120,70,20,.55);">
                 <div style="display:flex;align-items:center;gap:.6rem;min-width:0;">
@@ -333,7 +342,7 @@
             </div>
             <audio id="npc-media" class="hidden" hidden></audio>
             <div id="dialog-scroll">
-                <p id="dialog-text" class="typing-cursor" style="display:inline;font-size:1rem;line-height:1.7;color:#e7e5e4;"></p>
+                <p id="dialog-text" class="typing-cursor" style="display:block;font-size:1rem;line-height:1.7;color:#e7e5e4;"></p>
             </div>
             <div id="dialog-extra" style="margin-top:.7rem;padding-top:.45rem;border-top:1px solid rgba(120,70,20,.4);display:flex;flex-wrap:wrap;gap:.4rem;"></div>
         </div>
@@ -588,7 +597,6 @@
         function renderDialog() {
             const page = currentPageData();
             const isSecond = activePage === 1 && activeEntry && activeEntry.next;
-            const dialogBox = document.getElementById("dialog-box");
             document.getElementById("dialog-tag").textContent = page.tag || "考據細節";
             document.getElementById("dialog-name").textContent = page.name;
 
@@ -610,17 +618,38 @@
             document.getElementById("prev-btn").hidden = !(hasNext && activePage === 1);
             document.getElementById("next-btn").hidden = !(hasNext && activePage === 0);
 
-            dialogBox.style.transform = "translateY(0)";
+            setDialogOpen(true);
             typeWriterEffect(dialogTextEl, page.text);
         }
 
         function closeDialog() {
-            document.getElementById("dialog-box").style.transform = "translateY(110%)";
+            setDialogOpen(false);
             document.querySelectorAll("[data-frame]").forEach((frame) => frame.classList.remove("is-selected"));
             activeEntry = null;
             activePage = 0;
             resetMedia();
         }
+
+        function setDialogOpen(open) {
+            const dialog = document.getElementById("dialog-box");
+            dialog.classList.toggle("is-open", open);
+            dialog.style.transform = open ? "translateY(0)" : "translateY(110%)";
+            syncStageInset();
+        }
+
+        function syncStageInset() {
+            const stage = document.querySelector(".stage-container");
+            const dialog = document.getElementById("dialog-box");
+            if (!dialog.classList.contains("is-open")) {
+                stage.style.paddingBottom = "";
+                return;
+            }
+            const overlap = Math.max(0, stage.getBoundingClientRect().bottom - (window.innerHeight - dialog.offsetHeight));
+            stage.style.paddingBottom = overlap ? (overlap + 8) + "px" : "";
+        }
+
+        window.addEventListener("resize", syncStageInset);
+        new ResizeObserver(syncStageInset).observe(document.getElementById("dialog-box"));
 
         function skipTyping() {
             clearInterval(typingInterval);
@@ -659,7 +688,7 @@
 
         document.addEventListener("keydown", (e) => {
             const dialogBox = document.getElementById("dialog-box");
-            const open = dialogBox.style.transform === "translateY(0)";
+            const open = dialogBox.classList.contains("is-open");
             if (e.key === "Escape") closeDialog();
             else if (e.key === " " && open) {
                 e.preventDefault();

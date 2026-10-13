@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>撒該與耶利哥：考古與細節統整表</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #140e0a;
+            font-family: 'Noto Serif TC', 'PingFang TC', serif;
+            user-select: none;
+            color: #3a2415;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stage-container {
+            width: 100vw;
+            height: 66.6667vw;
+            max-height: 100vh;
+            max-width: 150vh;
+            position: relative;
+            background:
+                radial-gradient(ellipse at center, #f8edd6 0%, #e7d3ae 72%, #d9c093 100%);
+            padding: 0.45%;
+            container-type: size;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45%;
+        }
+
+        .masthead, .footnote {
+            flex: 0 0 auto;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .masthead {
+            padding: 0.55cqw 1.4cqw 0.45cqw;
+            background: rgba(255, 248, 232, 0.72);
+            border: 1px solid rgba(92, 58, 20, 0.28);
+        }
+
+        .masthead h1 {
+            font-size: 2.15cqw;
+            font-weight: 900;
+            letter-spacing: 0.12em;
+            line-height: 1.25;
+            color: #3a2415;
+        }
+
+        .masthead p {
+            margin-top: 0.15cqw;
+            font-size: 1.05cqw;
+            font-weight: 600;
+            line-height: 1.45;
+            color: #5c4030;
+        }
+
+        .board {
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55%;
+        }
+
+        .top-row {
+            flex: 2.25 1 0;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 0.74fr 1.62fr 0.74fr;
+            gap: 0.55%;
+        }
+
+        .stack {
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7%;
+        }
+
+        .stack .frame { flex: 1 1 0; min-height: 0; }
+        .stack .frame[data-frame="1"] { flex-grow: 1.45; }
+        .stack .frame[data-frame="2"] { flex-grow: 1.2; }
+        .stack .frame[data-frame="3"] { flex-grow: 0.95; }
+        .stack .frame[data-frame="8"] { flex-grow: 0.92; }
+        .stack .frame[data-frame="9"] { flex-grow: 1.08; }
+        .stack .frame[data-frame="10"] { flex-grow: 0.8; }
+
+        .bottom-row {
+            flex: 1.12 1 0;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.55%;
+        }
+
+        .center-tray {
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8%;
+            padding: 1.2%;
+            background:
+                linear-gradient(180deg, rgba(255, 250, 238, 0.45), rgba(232, 210, 170, 0.2));
+            border: 1px solid rgba(92, 58, 20, 0.28);
+            border-radius: 6px;
+        }
+
+        .frame {
+            position: relative;
+            background: #f7edd8;
+            overflow: hidden;
+            cursor: pointer;
+            border-radius: 6px;
+            border: 1px solid rgba(92, 58, 20, 0.32);
+            box-shadow: 0 1px 3px rgba(58, 36, 21, 0.12);
+            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        box-shadow 0.25s ease,
+                        border-color 0.25s ease;
+        }
+
+        .frame:hover,
+        .frame.is-selected {
+            transform: scale(1.018);
+            border-color: #d4920a;
+            box-shadow: 0 0 16px rgba(212, 146, 10, 0.55), inset 0 0 0 1px rgba(212, 146, 10, 0.45);
+            z-index: 5;
+        }
+
+        .frame:active { transform: scale(0.992); }
+
+        .media-content {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            pointer-events: none;
+        }
+
+        .center-tray .media-content { object-position: center bottom; }
+
+        .tax-card {
+            background:
+                linear-gradient(180deg, #fbf6ea 0%, #f3e6c8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3% 5%;
+        }
+
+        .tax-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.6cqw;
+        }
+
+        .tax-inner h2 {
+            font-size: 1.15cqw;
+            font-weight: 900;
+            letter-spacing: 0.03em;
+            line-height: 1.25;
+            color: #2c1b10;
+        }
+
+        .tax-inner ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.28cqw;
+        }
+
+        .tax-inner li {
+            font-size: 0.78cqw;
+            font-weight: 600;
+            line-height: 1.35;
+            color: #3d2a1c;
+            padding-left: 0.85cqw;
+            position: relative;
+        }
+
+        .tax-inner li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #6b4a2a;
+        }
+
+        .footnote {
+            padding: 0.42cqw 1cqw;
+            background: #3a2415;
+            color: #f6e6c4;
+            font-size: 1.12cqw;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            line-height: 1.4;
+        }
+
+        .typing-cursor::after {
+            content: "|";
+            animation: blink 0.8s infinite;
+            color: #f59e0b;
+            font-weight: 900;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        #dialog-scroll {
+            max-height: 22vh;
+            overflow-y: auto;
+        }
+
+        #dialog-scroll::-webkit-scrollbar,
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(217, 163, 67, 0.45);
+            border-radius: 4px;
+        }
+
+        [hidden] { display: none !important; }
+    </style>
+</head>
+<body>
+    <div id="loading-screen" class="fixed inset-0 z-[200] bg-[#140e0a] flex flex-col items-center justify-center text-white" style="position:fixed;inset:0;z-index:200;background:#140e0a;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:opacity .5s ease;">
+        <div style="width:3.5rem;height:3.5rem;border:4px solid rgba(120,80,20,.35);border-top-color:#f59e0b;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:.8rem;"></div>
+        <h2 style="font-size:1.25rem;font-weight:700;color:#fbbf24;letter-spacing:.2em;margin-bottom:.25rem;">載入歷史圖稿資源</h2>
+        <p style="color:rgba(253,230,138,.7);font-size:.8rem;">考據細節讀取中... <span id="loading-progress" style="color:#fbbf24;font-weight:700;">0%</span></p>
+    </div>
+
+    <div class="stage-container">
+        <header class="masthead">
+            <h1>撒該與耶利哥：考古與細節統整表</h1>
+            <p>路加福音 19:1-10 耶利哥是通往約旦河東的交通要道，富饒的香脂與沿途貿易使此地繁榮，也造就了稅吏的出現與爭議。</p>
+        </header>
+
+        <div class="board">
+            <div class="top-row">
+                <div class="stack">
+                    <div class="frame" data-frame="1" title="1. 第一世紀的耶利哥城">
+                        <img class="media-content" src="assets/Zacchaeus/jericho.png" alt="1. 第一世紀的耶利哥城">
+                    </div>
+                    <div class="frame tax-card" data-frame="2" title="2. 羅馬稅收制度與稅吏">
+                        <div class="tax-inner">
+                            <h2>2. 羅馬稅收制度與稅吏</h2>
+                            <ul>
+                                <li>包稅制度：稅吏先付錢承包稅收權，再向人民收取。</li>
+                                <li>稅吏長：掌管一定區域的稅吏，地位較一般稅吏更高。</li>
+                                <li>社會地位：被猶太人厭惡，與罪人為伍，不被社群接納。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="frame" data-frame="3" title="3. 無花果桑樹">
+                        <img class="media-content" src="assets/Zacchaeus/fig_tree.png" alt="3. 無花果桑樹">
+                    </div>
+                </div>
+
+                <div class="center-tray">
+                    <div class="frame" data-frame="jesus" title="耶穌">
+                        <img class="media-content" src="assets/Zacchaeus/jesus.png" alt="耶穌">
+                    </div>
+                    <div class="frame" data-frame="zacchaeus" title="撒該">
+                        <img class="media-content" src="assets/Zacchaeus/zacchaeus.png" alt="撒該">
+                    </div>
+                </div>
+
+                <div class="stack">
+                    <div class="frame" data-frame="8" title="8. 服裝與身份象徵">
+                        <img class="media-content" src="assets/Zacchaeus/clothing.png" alt="8. 服裝與身份象徵">
+                    </div>
+                    <div class="frame" data-frame="9" title="9. 當時的道路與交通">
+                        <img class="media-content" src="assets/Zacchaeus/road.png" alt="9. 當時的道路與交通">
+                    </div>
+                    <div class="frame" data-frame="10" title="10. 猶太人對稅吏的看法">
+                        <img class="media-content" src="assets/Zacchaeus/opinions.png" alt="10. 猶太人對稅吏的看法">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-row">
+                <div class="frame" data-frame="4" title="4. 耶利哥香脂">
+                    <img class="media-content" src="assets/Zacchaeus/frankincense.png" alt="4. 耶利哥香脂">
+                </div>
+                <div class="frame" data-frame="5" title="5. 第一世紀貨幣">
+                    <img class="media-content" src="assets/Zacchaeus/currency.png" alt="5. 第一世紀貨幣">
+                </div>
+                <div class="frame" data-frame="6" title="6. 猶太人的待客文化">
+                    <img class="media-content" src="assets/Zacchaeus/receiving_guests.png" alt="6. 猶太人的待客文化">
+                </div>
+                <div class="frame" data-frame="7" title="7. 撒該的家">
+                    <img class="media-content" src="assets/Zacchaeus/zacchaeus_house.png" alt="7. 撒該的家">
+                </div>
+                <div class="frame" data-frame="11" title="11. 相關考古發現">
+                    <img class="media-content" src="assets/Zacchaeus/artifacts.png" alt="11. 相關考古發現">
+                </div>
+            </div>
+        </div>
+
+        <footer class="footnote">核心信息：耶穌來，尋找並拯救失喪的人。祂超越人們的偏見，進入撒該的生命，帶來改變與更新。</footer>
+    </div>
+
+    <div id="dialog-box" style="position:fixed;left:0;bottom:0;width:100%;background:rgba(20,16,12,.95);border-top:2px solid rgba(245,158,11,.8);color:#fffbeb;padding:1rem 1.15rem 1.15rem;box-shadow:0 -10px 35px rgba(0,0,0,.85);transform:translateY(110%);transition:transform .3s ease;z-index:50;">
+        <div style="max-width:56rem;margin:0 auto;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;margin-bottom:.5rem;padding-bottom:.45rem;border-bottom:1px solid rgba(120,70,20,.55);">
+                <div style="display:flex;align-items:center;gap:.6rem;min-width:0;">
+                    <span id="dialog-tag" style="flex:0 0 auto;padding:.1rem .55rem;font-size:.72rem;font-weight:700;background:#f59e0b;color:#1a120c;border-radius:.25rem;letter-spacing:.04em;">歷史考據</span>
+                    <h3 id="dialog-name" style="color:#fcd34d;font-size:1.15rem;font-weight:700;letter-spacing:.04em;">主題名稱</h3>
+                </div>
+                <div style="display:flex;align-items:center;gap:.4rem;flex:0 0 auto;">
+                    <button type="button" id="prev-btn" hidden style="font-size:.75rem;color:#fcd34d;background:rgba(69,36,8,.65);padding:.2rem .5rem;border-radius:.25rem;border:1px solid rgba(180,120,40,.45);cursor:pointer;">上一則</button>
+                    <button type="button" id="next-btn" hidden style="font-size:.75rem;color:#fcd34d;background:rgba(69,36,8,.65);padding:.2rem .5rem;border-radius:.25rem;border:1px solid rgba(180,120,40,.45);cursor:pointer;">下一則</button>
+                    <button type="button" id="skip-btn" style="font-size:.75rem;color:rgba(252,211,77,.85);background:rgba(69,36,8,.65);padding:.2rem .5rem;border-radius:.25rem;border:1px solid rgba(180,120,40,.45);cursor:pointer;">展開全文</button>
+                    <button type="button" id="close-btn" style="color:rgba(252,211,77,.8);background:rgba(120,70,20,.4);border:0;border-radius:999px;width:1.7rem;height:1.7rem;cursor:pointer;">✕</button>
+                </div>
+            </div>
+            <audio id="npc-media" class="hidden" hidden></audio>
+            <div id="dialog-scroll">
+                <p id="dialog-text" class="typing-cursor" style="display:inline;font-size:1rem;line-height:1.7;color:#e7e5e4;"></p>
+            </div>
+            <div id="dialog-extra" style="margin-top:.7rem;padding-top:.45rem;border-top:1px solid rgba(120,70,20,.4);display:flex;flex-wrap:wrap;gap:.4rem;"></div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const images = document.querySelectorAll(".media-content");
+            const totalResources = images.length;
+            let loadedResources = 0;
+            const progressText = document.getElementById("loading-progress");
+            const loadingScreen = document.getElementById("loading-screen");
+
+            function updateProgress() {
+                loadedResources++;
+                const percent = Math.min(100, Math.floor((loadedResources / totalResources) * 100));
+                progressText.textContent = percent + "%";
+                if (loadedResources >= totalResources) {
+                    setTimeout(() => {
+                        loadingScreen.style.opacity = "0";
+                        setTimeout(() => { loadingScreen.style.display = "none"; }, 400);
+                    }, 200);
+                }
+            }
+
+            images.forEach((img) => {
+                if (img.complete && img.naturalWidth !== 0) updateProgress();
+                else {
+                    img.addEventListener("load", updateProgress);
+                    img.addEventListener("error", () => {
+                        handleImgFallback(img);
+                        updateProgress();
+                    });
+                }
+            });
+
+            setTimeout(() => {
+                if (loadingScreen.style.display !== "none") {
+                    loadingScreen.style.opacity = "0";
+                    setTimeout(() => { loadingScreen.style.display = "none"; }, 400);
+                }
+            }, 3000);
+        });
+
+        function handleImgFallback(imgElement) {
+            const parent = imgElement.parentElement;
+            imgElement.style.display = "none";
+            if (parent.querySelector(".fallback-box")) return;
+            const box = document.createElement("div");
+            box.className = "fallback-box";
+            box.style.cssText = "position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:.6rem;text-align:center;color:#6b4a2a;font-weight:700;";
+            box.textContent = imgElement.alt || "圖稿";
+            parent.appendChild(box);
+        }
+
+        const frameData = {
+            1: {
+                tag: "城邑",
+                name: "1. 第一世紀的耶利哥城",
+                text: "我們來看看第一世紀的耶利哥城。這座城市位於約旦河谷，海拔較低且氣候炎熱。城牆與城門不僅是主要的防禦工事，更是重要的交通要道，它是所有通往約旦河東與沙漠旅人的必經之地。",
+                points: [
+                    "位於約旦河谷，海拔較低且氣候炎熱。",
+                    "城牆與城門為主要防禦與交通要道。",
+                    "是通往約旦河東與沙漠的必經之地。"
+                ]
+            },
+            2: {
+                tag: "稅制",
+                name: "2. 羅馬稅收制度與稅吏",
+                text: "羅馬政府會將稅收業務承包給稅吏，稅吏必須先自掏腰包買下承包權，再向人民徵稅，上繳固定金額。為了從中牟利，稅吏經常超收稅款。像撒該這樣的「稅吏長」，掌管著一定區域的稅吏，地位更高，但也因此被猶太人深深厭惡，視他們為壓榨同胞的背叛者與罪人，完全被社群所孤立。",
+                points: [
+                    "包稅制度：稅吏先付錢承包稅收權，再向人民收取。",
+                    "稅吏長：掌管一定區域的稅吏，地位較一般稅吏更高。",
+                    "社會地位：被猶太人厭惡，與罪人為伍，不被社群接納。"
+                ]
+            },
+            3: {
+                tag: "植物",
+                name: "3. 無花果桑樹 (Sycamore Fig Tree)",
+                text: "無花果桑樹是當地常見的樹種，高度可達10到15公尺，枝葉非常茂密。它的特點是樹幹粗壯，且枝條會向外低垂伸展，非常適合攀爬，果實也能食用。這正是矮小的撒該能夠爬上去看耶穌的原因。",
+                points: [
+                    "樹高可達10-15公尺，枝葉茂密。",
+                    "樹幹粗壯，枝條向外伸展，適合攀爬。",
+                    "果實可食，葉大如掌，是當地常見樹種。"
+                ],
+                next: {
+                    tag: "物件台詞",
+                    name: "無花果桑樹",
+                    text: "我是一棵長在耶利哥城邊的無花果桑樹！雖然我結的果實綠綠黃黃的，但我最大的特色就是枝幹又粗又低，超級好爬！今天街上超熱鬧的，那個個子矮矮的稅吏長撒該，因為人太多擠不進去，居然不顧形象地爬到我身上來，就為了看耶穌一眼呢！"
+                }
+            },
+            4: {
+                tag: "物產",
+                name: "4. 耶利哥香脂 (Balsam)",
+                text: "這裡盛產珍貴的香脂與乳香，廣泛被用於醫療、製作香膏、祭祀與防腐。這些高價商品被大量出口到埃及、希臘與羅馬，為城市帶來了驚人的財富。",
+                points: [
+                    "耶利哥附近產香脂、乳香。",
+                    "香脂用於醫療、香膏、祭祀與防腐，是珍貴商品。",
+                    "出口至埃及、希臘與羅馬。"
+                ],
+                next: {
+                    tag: "物件台詞",
+                    name: "耶利哥香脂與美食",
+                    text: "歡迎來到撒該的豪宅！我們是桌上的頂級好物，有耶利哥最珍貴、可以用來做香料和醫藥的『香脂』，還有上等的無花果和葡萄酒！以前撒該只會用我們來招待那些有錢有勢的達官貴人，但今天不一樣了，今天家裡來了最尊貴的客人——耶穌！"
+                }
+            },
+            5: {
+                tag: "貨幣",
+                name: "5. 第一世紀貨幣",
+                text: "第一世紀主要流通的是羅馬銅幣，稅收也多以銅幣或銀幣來計算。如果您仔細看，這些貨幣上通常都刻有羅馬皇帝凱撒的肖像與文字。",
+                points: [
+                    "羅馬銅幣為主要流通貨幣。",
+                    "稅收用於銅幣或銀幣計算。",
+                    "貨幣上常刻有凱撒肖像與文字。"
+                ]
+            },
+            6: {
+                tag: "待客",
+                name: "6. 猶太人的待客文化",
+                text: "當時的屋主若要款待客人與旅人，會在家中設宴。大家會以坐姿或靠臥在墊子上的方式共享食物。主人的社會地位越高，準備的賓客宴席就會越加豐盛。",
+                points: [
+                    "屋主會設宴款待客人與旅人。",
+                    "坐或靠臥在墊子上，共享食物。",
+                    "主人地位越高，賓客越豐盛。"
+                ]
+            },
+            7: {
+                tag: "住宅",
+                name: "7. 撒該的家（富裕稅吏）",
+                text: "因為獲利豐厚，撒該的住宅規模通常較大，內部多設有寬敞的庭院與客廳，專門用來接待賓客。這樣的豪宅，也反映了當時耶利哥的繁榮與他位居社會頂層的財富地位。",
+                points: [
+                    "稅吏長獲利豐厚，住宅通常較大。",
+                    "多有庭院與客廳，用於接待賓客。",
+                    "內部當時反映繁榮，社會結構地位。"
+                ],
+                next: {
+                    tag: "人物台詞",
+                    name: "撒該 - 悔改與賠償宣告",
+                    text: "主啊！祢竟然願意接納我這個罪人，來到我的家，我真的太感動了！我決定要徹底改變！從今天起，我要把我財產的一半都分給窮人。而且，我知道按照我們猶太律法的規定，如果我騙了別人的錢，原本只要歸還本金，再多加『五分之一』當作罰金就夠了。但是，那樣根本不足以表達我的懊悔！我不要只做律法的最低標準，只要是我以前訛詐過誰的錢，我要遠遠超過律法的要求，直接『四倍』償還給他！我要用行動證明我真心的悔改！"
+                }
+            },
+            8: {
+                tag: "服飾",
+                name: "8. 服裝與身份象徵",
+                text: "身為稅吏長，撒該穿著精細編織的衣物來彰顯財富。在當時，外袍與頭巾是地位的重要象徵，尤其以紫色和金色最為尊貴。腳上則是穿著皮革製成的涼鞋。",
+                points: [
+                    "稅吏長穿著精織衣物，顯示財富與地位。",
+                    "頭巾與外袍為地位象徵，常以紫色、金色為貴。"
+                ]
+            },
+            9: {
+                tag: "交通",
+                name: "9. 當時的道路與交通",
+                text: "耶利哥位於主要大道上，這條路緊密連結著耶路撒冷與約旦河東。路上隨時可見龐大的駱駝商隊、各國旅人、羅馬官員與稅吏頻繁往來，川流不息。",
+                points: [
+                    "耶利哥位於主要大道上，連結耶路撒冷與約旦河東。",
+                    "商隊、旅人、官員、稅吏頻繁往來。"
+                ],
+                next: {
+                    tag: "人物台詞",
+                    name: "憤怒的商人",
+                    text: "氣死我了！我大老遠把這些珍貴的『耶利哥香脂』、橄欖油和椰棗運來市集賣，結果撒該那個吸血鬼，一過城門就硬生生剝了我一層皮，抽了一大筆重稅！他根本就是羅馬人的走狗！我們每天辛苦做買賣，賺的血汗錢都被他這種貪官污吏給私吞了，這世道還有天理嗎？"
+                }
+            },
+            10: {
+                tag: "社會",
+                name: "10. 猶太人對稅吏的看法",
+                text: "在宗教上，稅吏因為與外邦人合作、壓迫同胞，被視為「不潔淨」的人，甚至不能在法庭上作見證。然而，被社會唾棄的撒該，內心其實極度渴望被接納，這也反映了人對於修復關係的最深渴望。",
+                points: [
+                    "稅吏被視為與外邦人合作，壓迫同胞。",
+                    "在宗教上被視為不潔，不能作見證。",
+                    "撒該渴望被接納，反映人心關係的渴望。"
+                ],
+                next: {
+                    tag: "人物台詞",
+                    name: "憤怒的群眾",
+                    text: "大家快看！耶穌竟然走到那棵無花果桑樹下，叫那個大罪人撒該下來！更誇張的是，耶穌居然宣告說今天要去撒該家裡住！你們知道這代表什麼意思嗎？在我們這裡，主動去別人家裡作客住宿，就代表著『我要永遠和你成為好朋友』啊！撒該可是個專門抽重稅、訛詐我們的大貪官，我們明明都是上帝的子民，耶穌怎麼會願意跟這種欺壓我們的人做一輩子的好朋友呢？這實在太讓人難以接受了，祂難道不知道撒該是個罪人嗎？"
+                }
+            },
+            11: {
+                tag: "考古",
+                name: "11. 相關考古發現",
+                text: "如今在耶利哥遺址，考古學家挖掘出了當時的城牆、房屋與道路遺跡；同時也出土了稅收文書碎片、羅馬貨幣以及裝香脂的容器。這些珍貴的文物，都完美證實了當時貿易的繁榮與社會結構，與聖經的記載完全吻合。",
+                points: [
+                    "耶利哥遺址出土城牆、房屋、道路遺跡。",
+                    "出土稅收文書、貨幣、香脂容器等文物。",
+                    "證實當時貿易繁榮，社會結構與聖經相符。"
+                ]
+            },
+            zacchaeus: {
+                tag: "人物角色",
+                name: "撒該 - 稅吏長時期",
+                text: "我是耶利哥城的稅吏長撒該！你們知道『撒該』這個名字是什麼意思嗎？意思是『純潔』、『清白』！哈哈哈，太好笑了，對吧？在這世道，清白能當飯吃嗎？你看我穿著這身紫紅色的華服，這才是地位和實力！你們要知道，我們現在被羅馬帝國統治，每年得繳一筆固定的稅金。但這稅怎麼收，就是我的本事了！舉個例子，如果羅馬今年只要收一百萬的稅，我就利用職權收他個三百萬！多出來的那兩百萬呢？嘿嘿，當然是全進我的口袋啦！在耶利哥這座商業大城，每天的油水可比『清白』實在多了！",
+                points: []
+            },
+            jesus: {
+                tag: "人物角色",
+                name: "耶穌",
+                text: "撒該，快下來！今天我必住在你家裡。我知道你在這裡等我，我也知道你心中的孤單。今天，救恩要臨到這個家！因為人子來，為的就是要尋找、拯救失喪的人。",
+                points: []
+            }
+        };
+
+        let typingInterval = null;
+        let currentFullText = "";
+        let activeEntry = null;
+        let activePage = 0;
+
+        document.querySelectorAll("[data-frame]").forEach((frame) => {
+            frame.setAttribute("role", "button");
+            frame.setAttribute("tabindex", "0");
+            frame.setAttribute("aria-label", frame.getAttribute("title") || "");
+            frame.addEventListener("click", () => openFrame(frame.dataset.frame));
+            frame.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") openFrame(frame.dataset.frame);
+            });
+        });
+
+        document.getElementById("close-btn").addEventListener("click", closeDialog);
+        document.getElementById("skip-btn").addEventListener("click", skipTyping);
+        document.getElementById("next-btn").addEventListener("click", () => {
+            if (activeEntry && activeEntry.next) {
+                activePage = 1;
+                renderDialog();
+            }
+        });
+        document.getElementById("prev-btn").addEventListener("click", () => {
+            activePage = 0;
+            renderDialog();
+        });
+
+        function openFrame(id) {
+            const data = frameData[id];
+            if (!data) return;
+            activeEntry = data;
+            activePage = 0;
+            document.querySelectorAll("[data-frame]").forEach((frame) => {
+                frame.classList.toggle("is-selected", frame.dataset.frame === id);
+            });
+            renderDialog();
+        }
+
+        function currentPageData() {
+            if (activePage === 1 && activeEntry && activeEntry.next) return activeEntry.next;
+            return activeEntry;
+        }
+
+        function renderDialog() {
+            const page = currentPageData();
+            const isSecond = activePage === 1 && activeEntry && activeEntry.next;
+            const dialogBox = document.getElementById("dialog-box");
+            document.getElementById("dialog-tag").textContent = page.tag || "考據細節";
+            document.getElementById("dialog-name").textContent = page.name;
+
+            const dialogTextEl = document.getElementById("dialog-text");
+            dialogTextEl.textContent = "";
+            currentFullText = page.text;
+
+            const extraContainer = document.getElementById("dialog-extra");
+            extraContainer.innerHTML = "";
+            const points = isSecond ? [] : (activeEntry.points || []);
+            points.forEach((pt) => {
+                const badge = document.createElement("span");
+                badge.style.cssText = "background:rgba(69,26,8,.85);color:#fde68a;border:1px solid rgba(180,120,40,.5);padding:.1rem .45rem;border-radius:.25rem;font-size:.75rem;";
+                badge.textContent = "✦ " + pt;
+                extraContainer.appendChild(badge);
+            });
+
+            const hasNext = !!(activeEntry && activeEntry.next);
+            document.getElementById("prev-btn").hidden = !(hasNext && activePage === 1);
+            document.getElementById("next-btn").hidden = !(hasNext && activePage === 0);
+
+            dialogBox.style.transform = "translateY(0)";
+            typeWriterEffect(dialogTextEl, page.text);
+        }
+
+        function closeDialog() {
+            document.getElementById("dialog-box").style.transform = "translateY(110%)";
+            document.querySelectorAll("[data-frame]").forEach((frame) => frame.classList.remove("is-selected"));
+            activeEntry = null;
+            activePage = 0;
+            resetMedia();
+        }
+
+        function skipTyping() {
+            clearInterval(typingInterval);
+            const dialogTextEl = document.getElementById("dialog-text");
+            dialogTextEl.textContent = currentFullText;
+            dialogTextEl.classList.remove("typing-cursor");
+            const scroller = document.getElementById("dialog-scroll");
+            scroller.scrollTop = scroller.scrollHeight;
+        }
+
+        function typeWriterEffect(element, text) {
+            let i = 0;
+            clearInterval(typingInterval);
+            element.classList.add("typing-cursor");
+            const scroller = document.getElementById("dialog-scroll");
+            scroller.scrollTop = 0;
+            typingInterval = setInterval(() => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    scroller.scrollTop = scroller.scrollHeight;
+                } else {
+                    clearInterval(typingInterval);
+                    element.classList.remove("typing-cursor");
+                }
+            }, 20);
+        }
+
+        function resetMedia() {
+            clearInterval(typingInterval);
+            const mediaEl = document.getElementById("npc-media");
+            if (!mediaEl) return;
+            mediaEl.pause();
+            if (mediaEl.readyState > 0) mediaEl.currentTime = 0;
+        }
+
+        document.addEventListener("keydown", (e) => {
+            const dialogBox = document.getElementById("dialog-box");
+            const open = dialogBox.style.transform === "translateY(0)";
+            if (e.key === "Escape") closeDialog();
+            else if (e.key === " " && open) {
+                e.preventDefault();
+                skipTyping();
+            }
+        });
+    </script>
+</body>
+</html>

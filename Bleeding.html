@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>醫治血漏婦人：考古與細節統整表</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #140e0a;
+            font-family: 'Noto Serif TC', 'PingFang TC', serif;
+            user-select: none;
+            color: #3a2415;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stage-container {
+            position: relative;
+            background: #140e0a;
+            overflow: hidden;
+        }
+
+        .media-content {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            pointer-events: none;
+        }
+
+        .frame {
+            position: absolute;
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .frame:hover,
+        .frame.is-selected,
+        .frame:focus-visible {
+            background: rgba(212, 146, 10, 0.16);
+            border-color: #d4920a;
+            box-shadow: inset 0 0 0 1px rgba(212, 146, 10, 0.85);
+            z-index: 5;
+            outline: none;
+        }
+
+        .frame[data-frame="1"] { left: 1.0%; top: 5.9%; width: 24.2%; height: 31.3%; }
+        .frame[data-frame="2"] { left: 25.2%; top: 5.9%; width: 38.4%; height: 46.9%; }
+        .frame[data-frame="3"] { left: 64.3%; top: 5.9%; width: 15.6%; height: 31.3%; }
+        .frame[data-frame="4"] { left: 80.2%; top: 5.9%; width: 18.8%; height: 31.3%; }
+        .frame[data-frame="5"] { left: 1.0%; top: 38.0%; width: 24.2%; height: 36.6%; }
+        .frame[data-frame="seq"] { left: 25.2%; top: 53.2%; width: 38.4%; height: 21.0%; }
+        .frame[data-frame="6"] { left: 64.3%; top: 38.0%; width: 34.7%; height: 22.6%; }
+        .frame[data-frame="9"] { left: 64.3%; top: 61.0%; width: 34.7%; height: 13.2%; }
+        .frame[data-frame="7"] { left: 1.0%; top: 75.2%; width: 24.0%; height: 20.8%; }
+        .frame[data-frame="8"] { left: 25.2%; top: 75.2%; width: 46.0%; height: 20.8%; }
+        .frame[data-frame="10"] { left: 72.4%; top: 75.2%; width: 26.6%; height: 20.8%; }
+
+        .typing-cursor::after {
+            content: "|";
+            animation: blink 0.8s infinite;
+            color: #f59e0b;
+            font-weight: 900;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        #dialog-scroll { max-height: 22vh; overflow-y: auto; }
+        #dialog-scroll::-webkit-scrollbar,
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(217, 163, 67, 0.45);
+            border-radius: 4px;
+        }
+
+        [hidden] { display: none !important; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .frame,
+            #dialog-box,
+            #loading-screen { transition: none; }
+            .typing-cursor::after { animation: none; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-screen" style="position:fixed;inset:0;z-index:200;background:#140e0a;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:opacity .5s ease;">
+        <div style="width:3.5rem;height:3.5rem;border:4px solid rgba(120,80,20,.35);border-top-color:#f59e0b;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:.8rem;"></div>
+        <h2 style="font-size:1.25rem;font-weight:700;color:#fbbf24;letter-spacing:.2em;margin-bottom:.25rem;">載入歷史圖稿資源</h2>
+        <p style="color:rgba(253,230,138,.7);font-size:.8rem;">考據細節讀取中... <span id="loading-progress" style="color:#fbbf24;font-weight:700;">0%</span></p>
+    </div>
+
+    <div class="stage-container">
+        <img class="media-content" src="assets/Bleeding/poster.jpg" alt="醫治血漏婦人：考古與細節統整表">
+        <div class="frame" data-frame="1" title="1. 血漏婦人"></div>
+        <div class="frame" data-frame="2" title="2. 事件場景：加利利城鎮街道"></div>
+        <div class="frame" data-frame="3" title="3. 衣裳繸子的意義"></div>
+        <div class="frame" data-frame="4" title="4. 第一世紀醫療背景"></div>
+        <div class="frame" data-frame="5" title="5. 血漏是什麼？"></div>
+        <div class="frame" data-frame="seq" title="事件發生的經過"></div>
+        <div class="frame" data-frame="6" title="6. 她為什麼偷偷摸耶穌？"></div>
+        <div class="frame" data-frame="7" title="7. 利未記15章—潔淨律法"></div>
+        <div class="frame" data-frame="8" title="8. 耶穌帶來的全面恢復"></div>
+        <div class="frame" data-frame="9" title="9. 耶穌稱她「女兒」的意義"></div>
+        <div class="frame" data-frame="10" title="10. 考古背景小知識"></div>
+    </div>
+
+    <div id="dialog-box" style="position:fixed;left:0;bottom:0;width:100%;background:#16110c;border-top:2px solid rgba(245,158,11,.8);color:#fffbeb;padding:1rem 1.15rem 1.15rem;box-shadow:0 -10px 35px rgba(0,0,0,.85);transform:translateY(110%);transition:transform .3s ease;z-index:50;">
+        <div style="max-width:56rem;margin:0 auto;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;margin-bottom:.5rem;padding-bottom:.45rem;border-bottom:1px solid rgba(120,70,20,.55);">
+                <div style="display:flex;align-items:center;gap:.6rem;min-width:0;">
+                    <span id="dialog-tag" style="flex:0 0 auto;padding:.1rem .55rem;font-size:.72rem;font-weight:700;background:#f59e0b;color:#1a120c;border-radius:.25rem;letter-spacing:.04em;">歷史考據</span>
+                    <h3 id="dialog-name" style="color:#fcd34d;font-size:1.15rem;font-weight:700;letter-spacing:.04em;">主題名稱</h3>
+                </div>
+                <div style="display:flex;align-items:center;gap:.4rem;flex:0 0 auto;">
+                    <button type="button" id="prev-btn" hidden style="font-size:.75rem;color:#fcd34d;background:rgba(69,36,8,.65);padding:.2rem .5rem;border-radius:.25rem;border:1px solid rgba(180,120,40,.45);cursor:pointer;">上一則</button>
+                    <button type="button" id="next-btn" hidden style="font-size:.75rem;color:#fcd34d;background:rgba(69,36,8,.65);padding:.2rem .5rem;border-radius:.25rem;border:1px solid rgba(180,120,40,.45);cursor:pointer;">下一則</button>
+                    <button type="button" id="skip-btn" style="font-size:.75rem;color:rgba(252,211,77,.85);background:rgba(69,36,8,.65);padding:.2rem .5rem;border-radius:.25rem;border:1px solid rgba(180,120,40,.45);cursor:pointer;">展開全文</button>
+                    <button type="button" id="close-btn" style="color:rgba(252,211,77,.8);background:rgba(120,70,20,.4);border:0;border-radius:999px;width:1.7rem;height:1.7rem;cursor:pointer;">✕</button>
+                </div>
+            </div>
+            <audio id="npc-media" hidden></audio>
+            <div id="dialog-scroll">
+                <p id="dialog-text" class="typing-cursor" style="display:block;font-size:1rem;line-height:1.7;color:#e7e5e4;"></p>
+            </div>
+            <div id="dialog-extra" style="margin-top:.7rem;padding-top:.45rem;border-top:1px solid rgba(120,70,20,.4);display:flex;flex-wrap:wrap;gap:.4rem;"></div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const images = document.querySelectorAll(".media-content");
+            const totalResources = images.length;
+            let loadedResources = 0;
+            const progressText = document.getElementById("loading-progress");
+            const loadingScreen = document.getElementById("loading-screen");
+
+            function updateProgress() {
+                loadedResources++;
+                const percent = Math.min(100, Math.floor((loadedResources / totalResources) * 100));
+                progressText.textContent = percent + "%";
+                if (loadedResources >= totalResources) {
+                    setTimeout(() => {
+                        loadingScreen.style.opacity = "0";
+                        setTimeout(() => { loadingScreen.style.display = "none"; }, 400);
+                    }, 200);
+                }
+            }
+
+            images.forEach((img) => {
+                if (img.complete && img.naturalWidth !== 0) updateProgress();
+                else {
+                    img.addEventListener("load", updateProgress);
+                    img.addEventListener("error", () => {
+                        handleImgFallback(img);
+                        updateProgress();
+                    });
+                }
+            });
+
+            setTimeout(() => {
+                if (loadingScreen.style.display !== "none") {
+                    loadingScreen.style.opacity = "0";
+                    setTimeout(() => { loadingScreen.style.display = "none"; }, 400);
+                }
+            }, 3000);
+        });
+
+        function handleImgFallback(imgElement) {
+            const parent = imgElement.parentElement;
+            imgElement.style.display = "none";
+            if (parent.querySelector(".fallback-box")) return;
+            const box = document.createElement("div");
+            box.className = "fallback-box";
+            box.style.cssText = "position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:.6rem;text-align:center;color:#6b4a2a;font-weight:700;";
+            box.textContent = imgElement.alt || "圖稿";
+            parent.appendChild(box);
+        }
+
+        const frameData = {
+            1: {
+                tag: "人物角色",
+                name: "血漏的婦人",
+                text: "我真的好累……這個慢性出血的病折磨了我整整十二年，讓我身體虛弱又貧血。這幾年來，我把積蓄全花光了，看了無數的醫生，卻一點都沒有好轉。更痛苦的是，按照律法，我是『不潔淨』的，如果被認出來，我一定會被嚴厲責備。所以我只能偷偷摸摸地躲在人群裡……但我聽說耶穌來了！只要我能悄悄摸到祂外袍的繸子，我相信我一定能痊癒！拜託，千萬別讓人發現我……",
+                points: [
+                    "患病十二年",
+                    "花盡積蓄求醫仍未得醫治",
+                    "耶穌：樸素長袍，外袍為織布",
+                    "衣裳繸子（衣角繸子）"
+                ],
+                next: {
+                    tag: "人物角色",
+                    name: "耶穌",
+                    text: "是誰摸了我的衣裳？我感覺到有能力從我身上出去了。……女兒，不要害怕，站出來吧。妳的信救了妳，平平安安地回去吧！從今天起，妳不再是那個被隔離、被視為不潔淨的邊緣人。妳的身心都痊癒了，重新回到群體中，安心地敬拜吧！"
+                }
+            },
+            2: {
+                tag: "場景",
+                name: "2. 事件場景：加利利城鎮街道",
+                text: "在加利利某個城鎮的街道上。您可以想像一下，當時的街道非常狹窄，兩旁是堅硬的石造房屋與熱鬧的市集商舖。在這樣擁擠不堪的人群中，這位虛弱的婦人要奮力靠近耶穌，是多麼艱難的一件事。",
+                points: [
+                    "狹窄街道",
+                    "石造房屋",
+                    "擁擠人群",
+                    "市集商舖"
+                ],
+                next: {
+                    tag: "人物台詞",
+                    name: "門徒",
+                    text: "夫子，您怎麼會問『是誰摸我』呢？您看這加利利城鎮的街道多麼狹窄，周圍有這麼多子民擠來擠去，大家都推擠在您身上啊！在這麼擁擠的情況下，誰沒有碰到您呢？這實在是太奇怪了！"
+                }
+            },
+            3: {
+                tag: "衣飾",
+                name: "3. 衣裳繸子的意義",
+                text: "根據《民數記》與《申命記》的記載，繸子上的藍線象徵著屬神的身份，隨時提醒人們要遵守神的誡命。因此，當這位婦人伸出手時，她觸摸的絕對不僅僅是一塊布料，而是以極大的信心，緊緊抓住了神的應許。",
+                points: [
+                    "藍線：象徵屬神的身份，提醒遵守神的誡命。",
+                    "經文：民數記 15:38-40；申命記 22:12",
+                    "她摸的不只是衣角，更是信心抓住神的應許。"
+                ],
+                next: {
+                    tag: "物件台詞",
+                    name: "外袍的繸子",
+                    text: "我是耶穌外袍邊緣的繸子，仔細看，我身上有一根特別的『藍線』！這可是象徵屬神的身份，用來提醒大家遵守上帝誡命的標誌。當那位婦人伸出顫抖的手抓住我時，她摸的可不只是一塊普通的布料，而是憑著極大的信心，緊緊抓住了上帝醫治的應許！"
+                }
+            },
+            4: {
+                tag: "醫療",
+                name: "4. 第一世紀醫療背景",
+                text: "我們來看看第一世紀的醫療背景。當時常見的醫療器具包括探查用的探針、保存藥物的玻璃或陶器藥瓶，以及醫藥袋。治療方式多半依賴草藥、香膏、油膏，或是透過飲食調整與祈禱。雖然聖經沒有記載她接受過哪些具體療程，但可以想見當時的醫療資源對她的病情束手無策。",
+                points: [
+                    "探針（探查）",
+                    "草藥、香膏、油膏",
+                    "玻璃或陶器藥瓶",
+                    "醫藥袋",
+                    "當時常見治療方式：草藥、油膏、飲食調整、祈禱等。（聖經未記載她接受哪些具體治療方式。）"
+                ],
+                next: {
+                    tag: "物件台詞",
+                    name: "醫療器具與草藥缽",
+                    text: "唉，我們是第一世紀醫生最常用的草藥缽、探針和醫療袋。這十二年來，那位可憐的婦人把所有的銅幣都花在我們身上了。我們試過給她敷草藥、擦油膏、甚至調整飲食，但她的病根本沒有好轉，反而讓她傾家蕩產。看來，人類的醫術對她真的是無能為力了。"
+                }
+            },
+            5: {
+                tag: "病情",
+                name: "5. 血漏是什麼？",
+                text: "第五格解釋了困擾她多年的「血漏」。雖然聖經並未詳細說明病因，但這很可能是長期的子宮出血或其他慢性出血疾病。長達十二年的不斷出血，導致她身體極度虛弱、貧血與疲乏。再加上為了治病花盡積蓄，她早已經身心俱疲。",
+                points: [
+                    "長期出血",
+                    "身體虛弱",
+                    "花盡積蓄"
+                ]
+            },
+            seq: {
+                tag: "經過",
+                name: "事件發生的經過",
+                text: "事件發生的經過，記載於馬可福音 5:25-34。婦人在人群中默默跟隨耶穌，摸到耶穌衣裳的繸子，立刻感覺血漏止住了。耶穌感覺有能力從他身上出去，便問：「是誰摸我？」門徒覺得奇怪，因為這麼多人擁擠著。婦人知道不能隱藏，就出來戰戰兢兢，將實情全告訴耶穌。耶穌對她說：「女兒，你的信救了你；平平安安地回去吧！」",
+                points: [
+                    "婦人在人群中默默跟隨耶穌",
+                    "摸到耶穌衣裳的繸子",
+                    "立刻感覺血漏止住了",
+                    "耶穌問：是誰摸我？",
+                    "門徒覺得奇怪：這麼多人擠你",
+                    "婦人出來，將實情全告訴耶穌",
+                    "女兒，你的信救了你；平平安安地回去吧！"
+                ]
+            },
+            6: {
+                tag: "內心",
+                name: "6. 她為什麼偷偷摸耶穌？",
+                text: "第六格探討了婦人內心的掙扎：她為什麼要「偷偷地」摸耶穌？因為她自認是不潔淨的，害怕被人發現後會遭到嚴厲責備，也不敢公然打擾耶穌。儘管如此，她心中卻有一股強大且單純的信念——她深信只要摸到耶穌的衣裳，自己就一定能得著醫治。",
+                points: [
+                    "害怕被責備",
+                    "自認不潔",
+                    "不敢打擾耶穌",
+                    "相信只要摸衣裳就能得醫治"
+                ]
+            },
+            7: {
+                tag: "律法",
+                name: "7. 利未記15章—潔淨律法",
+                text: "按照律法，患血漏的人在宗教上屬於「不潔淨」。這意味著，凡是摸到她的人，或是她坐過、躺過的地方，都會跟著變得不潔。她無法正常參與聖殿敬拜與任何宗教活動，這十二年來，她只能過著被社會迴避與無情隔離的生活。",
+                points: [
+                    "患血漏者屬於宗教上的不潔",
+                    "摸她的人也不潔",
+                    "她坐過、躺過的地方也不潔",
+                    "不能正常參與聖殿敬拜及宗教活動",
+                    "因此常被迴避與隔離"
+                ],
+                next: {
+                    tag: "物件台詞",
+                    name: "潔淨律法書卷",
+                    text: "我是利未記第十五章的律法。我的規定非常嚴格：只要婦人患了血漏，她在宗教儀式上就是『不潔淨』的！她躺過的床、坐過的椅子都不潔淨，誰要是碰了她，也會跟著不潔淨。這就是為什麼她不能參加聖殿的敬拜，必須遠離所有的子民，過著孤立無援的生活。"
+                }
+            },
+            8: {
+                tag: "恢復",
+                name: "8. 耶穌帶來的全面恢復",
+                text: "醫治前：身體患病、被視為不潔、與人隔離、無法安心敬拜、沒有盼望。醫治後：身體痊癒、恢復潔淨、回到群體、恢復敬拜生活、得著平安與盼望。",
+                points: [
+                    "醫治前：身體患病、被視為不潔、與人隔離、無法安心敬拜、沒有盼望",
+                    "醫治後：身體痊癒、恢復潔淨、回到群體、恢復敬拜生活、得著平安與盼望"
+                ]
+            },
+            9: {
+                tag: "稱呼",
+                name: "9. 耶穌稱她「女兒」的意義",
+                text: "在第一世紀的社會中，婦女鮮少在公開場合受到稱讚。然而，耶穌卻在眾人面前親口稱呼她為「女兒」。這不僅表達了神完全的接納、尊重與深深的愛，更向所有人宣告：她不再是那個被社會唾棄的「不潔婦人」，而是蒙神珍愛、重獲新生的女兒。",
+                points: [
+                    "在當時，婦女很少被公開稱讚。",
+                    "耶穌稱她「女兒」，表示接納、尊重與愛。",
+                    "她不再只是「不潔的婦人」，而是蒙神愛的女兒。"
+                ]
+            },
+            10: {
+                tag: "考古",
+                name: "10. 考古背景小知識",
+                text: "油燈、石製或陶製器皿、麻布衣料、銅幣。",
+                points: [
+                    "油燈",
+                    "石製或陶製器皿",
+                    "麻布衣料",
+                    "銅幣"
+                ]
+            }
+        };
+
+        let typingInterval = null;
+        let currentFullText = "";
+        let activeEntry = null;
+        let activePage = 0;
+
+        document.querySelectorAll("[data-frame]").forEach((frame) => {
+            frame.setAttribute("role", "button");
+            frame.setAttribute("tabindex", "0");
+            frame.setAttribute("aria-label", frame.getAttribute("title") || "");
+            frame.addEventListener("click", () => openFrame(frame.dataset.frame));
+            frame.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") openFrame(frame.dataset.frame);
+            });
+        });
+
+        document.getElementById("close-btn").addEventListener("click", closeDialog);
+        document.getElementById("skip-btn").addEventListener("click", skipTyping);
+        document.getElementById("next-btn").addEventListener("click", () => {
+            if (activeEntry && activeEntry.next) {
+                activePage = 1;
+                renderDialog();
+            }
+        });
+        document.getElementById("prev-btn").addEventListener("click", () => {
+            activePage = 0;
+            renderDialog();
+        });
+
+        function openFrame(id) {
+            const data = frameData[id];
+            if (!data) return;
+            activeEntry = data;
+            activePage = 0;
+            document.querySelectorAll("[data-frame]").forEach((frame) => {
+                frame.classList.toggle("is-selected", frame.dataset.frame === id);
+            });
+            renderDialog();
+        }
+
+        function currentPageData() {
+            if (activePage === 1 && activeEntry && activeEntry.next) return activeEntry.next;
+            return activeEntry;
+        }
+
+        function renderDialog() {
+            const page = currentPageData();
+            const isSecond = activePage === 1 && activeEntry && activeEntry.next;
+            document.getElementById("dialog-tag").textContent = page.tag || "考據細節";
+            document.getElementById("dialog-name").textContent = page.name;
+
+            const dialogTextEl = document.getElementById("dialog-text");
+            dialogTextEl.textContent = "";
+            currentFullText = page.text;
+
+            const extraContainer = document.getElementById("dialog-extra");
+            extraContainer.innerHTML = "";
+            const points = isSecond ? [] : (activeEntry.points || []);
+            points.forEach((pt) => {
+                const badge = document.createElement("span");
+                badge.style.cssText = "background:rgba(69,26,8,.85);color:#fde68a;border:1px solid rgba(180,120,40,.5);padding:.1rem .45rem;border-radius:.25rem;font-size:.75rem;";
+                badge.textContent = "✦ " + pt;
+                extraContainer.appendChild(badge);
+            });
+
+            const hasNext = !!(activeEntry && activeEntry.next);
+            document.getElementById("prev-btn").hidden = !(hasNext && activePage === 1);
+            document.getElementById("next-btn").hidden = !(hasNext && activePage === 0);
+
+            setDialogOpen(true);
+            typeWriterEffect(dialogTextEl, page.text);
+        }
+
+        function closeDialog() {
+            setDialogOpen(false);
+            document.querySelectorAll("[data-frame]").forEach((frame) => frame.classList.remove("is-selected"));
+            activeEntry = null;
+            activePage = 0;
+            resetMedia();
+        }
+
+        function setDialogOpen(open) {
+            const dialog = document.getElementById("dialog-box");
+            dialog.classList.toggle("is-open", open);
+            dialog.style.transform = open ? "translateY(0)" : "translateY(110%)";
+            syncStageInset();
+        }
+
+        function syncStageInset() {
+            const stage = document.querySelector(".stage-container");
+            const dialog = document.getElementById("dialog-box");
+            const reserve = dialog.classList.contains("is-open") ? dialog.offsetHeight + 10 : 0;
+            const availH = Math.max(120, window.innerHeight - reserve);
+            const availW = window.innerWidth;
+            const ratio = 1024 / 617;
+            let w = availW;
+            let h = w / ratio;
+            if (h > availH) {
+                h = availH;
+                w = h * ratio;
+            }
+            stage.style.width = w + "px";
+            stage.style.height = h + "px";
+            stage.style.marginBottom = reserve ? reserve + "px" : "";
+        }
+
+        window.addEventListener("resize", syncStageInset);
+        new ResizeObserver(syncStageInset).observe(document.getElementById("dialog-box"));
+        syncStageInset();
+
+        function skipTyping() {
+            clearInterval(typingInterval);
+            const dialogTextEl = document.getElementById("dialog-text");
+            dialogTextEl.textContent = currentFullText;
+            dialogTextEl.classList.remove("typing-cursor");
+            const scroller = document.getElementById("dialog-scroll");
+            scroller.scrollTop = scroller.scrollHeight;
+        }
+
+        function typeWriterEffect(element, text) {
+            let i = 0;
+            clearInterval(typingInterval);
+            element.classList.add("typing-cursor");
+            const scroller = document.getElementById("dialog-scroll");
+            scroller.scrollTop = 0;
+            typingInterval = setInterval(() => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    scroller.scrollTop = scroller.scrollHeight;
+                } else {
+                    clearInterval(typingInterval);
+                    element.classList.remove("typing-cursor");
+                }
+            }, 20);
+        }
+
+        function resetMedia() {
+            clearInterval(typingInterval);
+            const mediaEl = document.getElementById("npc-media");
+            if (!mediaEl) return;
+            mediaEl.pause();
+            if (mediaEl.readyState > 0) mediaEl.currentTime = 0;
+        }
+
+        document.addEventListener("keydown", (e) => {
+            const dialogBox = document.getElementById("dialog-box");
+            const open = dialogBox.classList.contains("is-open");
+            if (e.key === "Escape") closeDialog();
+            else if (e.key === " " && open) {
+                e.preventDefault();
+                skipTyping();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -33,26 +33,26 @@
 
         /* 滿版自適應等比畫布 (嚴格鎖定 16:9) */
         .stage-container {
-            width: min(100vw, calc(100vh * 16 / 9));
-            height: min(100vh, calc(100vw * 9 / 16));
+            width: min(100%, calc(100vh * 1.3388));
+            max-height: 100%;
+            aspect-ratio: 1.3388;
             position: relative;
-            background: #f3e6c8;
+            background: #d7c4a2;
             container-type: size;
+            overflow: hidden;
         }
 
         .grid-container {
-            display: grid;
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
-            grid-template-columns: 382fr 111fr 565fr 382fr;
-            grid-template-rows: 277fr 235fr 63fr 161fr 77fr 211fr;
-            gap: 0;
         }
 
         .frame {
-            position: relative;
+            position: absolute;
             z-index: 1;
-            background: #efe2c6;
+            background: #d7c4a2;
             overflow: hidden;
             cursor: pointer;
             border: 0;
@@ -102,16 +102,16 @@
         }
 
         /* 精確網格格位對應 (九宮/十格完整排版) */
-        .frame-1  { grid-area: 1 / 1 / 2 / 2; } /* 1. 睚魯是誰？ */
-        .frame-3  { grid-area: 2 / 1 / 3 / 2; } /* 2. 十二歲女孩 */
-        .frame-2  { grid-area: 3 / 1 / 5 / 3; } /* 3. 喪葬文化 */
-        .frame-4  { grid-area: 5 / 1 / 7 / 3; } /* 4. 耶穌觸摸死人，有何意義？ */
-        .frame-8  { grid-area: 1 / 2 / 3 / 4; } /* 耶穌與女孩主圖 */
-        .frame-5  { grid-area: 3 / 3 / 6 / 4; } /* 5. 加利利住宅 */
-        .frame-6  { grid-area: 6 / 3 / 7 / 5; } /* 9. 房間與家具細節 */
-        .frame-10 { grid-area: 1 / 4 / 2 / 5; } /* 6. 亞蘭文：「大利大，古米！」 */
-        .frame-9  { grid-area: 2 / 4 / 4 / 5; } /* 7. 考古發現的相關文物 */
-        .frame-7  { grid-area: 4 / 4 / 6 / 5; } /* 8. 舊約律法與背景 */
+        .frame-3  { left: 0; top: 0; width: 23.2%; height: 41.2%; }
+        .frame-8  { left: 22.7%; top: 0; width: 54.6%; height: 41.2%; }
+        .frame-1  { left: 76.9%; top: 0; width: 23.1%; height: 41.2%; }
+        .frame-2  { left: 0; top: 40.6%; width: 40.4%; height: 30.5%; }
+        .frame-4  { left: 39.8%; top: 40.6%; width: 30.4%; height: 30.5%; }
+        .frame-5  { left: 69.8%; top: 40.6%; width: 30.2%; height: 30.5%; }
+        .frame-7  { left: 0; top: 70.7%; width: 16.6%; height: 29.3%; }
+        .frame-9  { left: 16.1%; top: 70.7%; width: 16.6%; height: 29.3%; }
+        .frame-10 { left: 32.3%; top: 70.7%; width: 29.3%; height: 29.3%; }
+        .frame-6  { left: 61.2%; top: 70.7%; width: 38.8%; height: 29.3%; }
 
         /* 古典金色打字光標特效 */
         .typing-cursor::after {

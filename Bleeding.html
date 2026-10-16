@@ -29,11 +29,11 @@
 
         .stage-container {
             position: relative;
-            aspect-ratio: 1024 / 617;
-            width: min(100%, calc(100vh * 1024 / 617));
+            aspect-ratio: 1.2791;
+            width: min(100%, calc(100vh * 1.2791));
             max-height: 100%;
             min-width: 0;
-            background: #f3e6c8;
+            background: #d7c4a2;
             container-type: size;
             overflow: hidden;
         }
@@ -49,11 +49,7 @@
             pointer-events: none;
         }
 
-        .masthead {
-            top: 0;
-            height: 5.6%;
-            padding: 0 1.2cqw;
-        }
+        .masthead { display: none; }
 
         .masthead h1 {
             color: #3a2415;
@@ -92,7 +88,7 @@
             z-index: 1;
             padding: 0;
             border: 0;
-            background: #efe2c6;
+            background: #d7c4a2;
             color: inherit;
             font: inherit;
             text-align: left;
@@ -118,22 +114,22 @@
             transform: scale(1.12);
         }
 
-        .frame[data-frame="1"] { left: 0; top: 5.3%; width: 25.5%; height: 32.4%; }
-        .frame[data-frame="5"] { left: 0; top: 37.3%; width: 25.5%; height: 37.6%; }
-        .frame[data-frame="7"] { left: 0; top: 74.5%; width: 25.4%; height: 19.5%; }
-        .frame[data-frame="2"] { left: 25.1%; top: 5.3%; width: 39.5%; height: 47.6%; }
-        .frame[data-frame="seq"] { left: 25.1%; top: 52.5%; width: 39.5%; height: 22.4%; }
-        .frame[data-frame="3"] { left: 64.2%; top: 5.3%; width: 16.2%; height: 32.4%; }
-        .frame[data-frame="4"] { left: 80%; top: 5.3%; width: 20%; height: 32.4%; }
-        .frame[data-frame="6"] { left: 64.2%; top: 37.3%; width: 35.8%; height: 23.4%; }
-        .frame[data-frame="9"] { left: 64.2%; top: 60.3%; width: 35.8%; height: 14.6%; }
-        .frame[data-frame="8"] { left: 25%; top: 74.5%; width: 47.6%; height: 19.5%; }
-        .frame[data-frame="10"] { left: 72.2%; top: 74.5%; width: 27.8%; height: 19.5%; }
+        .frame[data-frame="1"] { left: 0; top: 0; width: 23.2%; height: 39.4%; }
+        .frame[data-frame="2"] { left: 22.7%; top: 0; width: 23.3%; height: 39.4%; }
+        .frame[data-frame="seq"] { left: 45.5%; top: 0; width: 54.5%; height: 39.4%; }
+        .frame[data-frame="3"] { left: 0; top: 38.8%; width: 15.7%; height: 35.4%; }
+        .frame[data-frame="4"] { left: 15.2%; top: 38.8%; width: 15.8%; height: 35.4%; }
+        .frame[data-frame="6"] { left: 30.6%; top: 38.8%; width: 49%; height: 35.4%; }
+        .frame[data-frame="5"] { left: 79.2%; top: 38.8%; width: 20.8%; height: 35.4%; }
+        .frame[data-frame="7"] { left: 0; top: 73.8%; width: 21.8%; height: 21%; }
+        .frame[data-frame="8"] { left: 21.2%; top: 73.8%; width: 29%; height: 21%; }
+        .frame[data-frame="9"] { left: 49.8%; top: 73.8%; width: 29%; height: 21%; }
+        .frame[data-frame="10"] { left: 78.3%; top: 73.8%; width: 21.7%; height: 21%; }
 
         .footnote {
-            z-index: 2;
-            top: 93.6%;
-            height: 6.4%;
+            z-index: 6;
+            top: 94.6%;
+            height: 5.4%;
             padding: 0 1.2cqw;
             background: #3a2415;
             color: #f6e6c4;

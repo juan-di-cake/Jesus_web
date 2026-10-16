@@ -290,7 +290,8 @@
                     "位於約旦河谷，海拔較低且氣候炎熱。",
                     "城牆與城門為主要防禦與交通要道。",
                     "是通往約旦河東與沙漠的必經之地。"
-                ]
+                ],
+                media: "assets/Zacchaeus/Voice/jericho.m4a"
             },
             2: {
                 tag: "稅制",
@@ -300,7 +301,8 @@
                     "包稅制度：稅吏先付錢承包稅收權，再向人民收取。",
                     "稅吏長：掌管一定區域的稅吏，地位較一般稅吏更高。",
                     "社會地位：被猶太人厭惡，與罪人為伍，不被社群接納。"
-                ]
+                ],
+                media: "assets/Zacchaeus/Voice/tax.m4a"
             },
             3: {
                 tag: "植物",
@@ -311,6 +313,7 @@
                     "樹幹粗壯，枝條向外伸展，適合攀爬。",
                     "果實可食，葉大如掌，是當地常見樹種。"
                 ],
+                media: "assets/Zacchaeus/Voice/tree.m4a",
                 next: {
                     tag: "物件台詞",
                     name: "無花果桑樹",
@@ -326,6 +329,7 @@
                     "香脂用於醫療、香膏、祭祀與防腐，是珍貴商品。",
                     "出口至埃及、希臘與羅馬。"
                 ],
+                media: "assets/Zacchaeus/Voice/balsam.m4a",
                 next: {
                     tag: "物件台詞",
                     name: "耶利哥香脂與美食",
@@ -340,7 +344,8 @@
                     "羅馬銅幣為主要流通貨幣。",
                     "稅收用於銅幣或銀幣計算。",
                     "貨幣上常刻有凱撒肖像與文字。"
-                ]
+                ],
+                media: "assets/Zacchaeus/Voice/coins.m4a"
             },
             6: {
                 tag: "待客",
@@ -350,7 +355,8 @@
                     "屋主會設宴款待客人與旅人。",
                     "坐或靠臥在墊子上，共享食物。",
                     "主人地位越高，賓客越豐盛。"
-                ]
+                ],
+                media: "assets/Zacchaeus/Voice/hospitality.m4a"
             },
             7: {
                 tag: "住宅",
@@ -361,6 +367,7 @@
                     "多有庭院與客廳，用於接待賓客。",
                     "內部當時反映繁榮，社會結構地位。"
                 ],
+                media: "assets/Zacchaeus/Voice/house.m4a",
                 next: {
                     tag: "人物台詞",
                     name: "撒該 - 悔改與賠償宣告",
@@ -374,7 +381,8 @@
                 points: [
                     "稅吏長穿著精織衣物，顯示財富與地位。",
                     "頭巾與外袍為地位象徵，常以紫色、金色為貴。"
-                ]
+                ],
+                media: "assets/Zacchaeus/Voice/clothing.m4a"
             },
             9: {
                 tag: "交通",
@@ -384,6 +392,7 @@
                     "耶利哥位於主要大道上，連結耶路撒冷與約旦河東。",
                     "商隊、旅人、官員、稅吏頻繁往來。"
                 ],
+                media: "assets/Zacchaeus/Voice/road.m4a",
                 next: {
                     tag: "人物台詞",
                     name: "憤怒的商人",
@@ -399,6 +408,7 @@
                     "在宗教上被視為不潔，不能作見證。",
                     "撒該渴望被接納，反映人心關係的渴望。"
                 ],
+                media: "assets/Zacchaeus/Voice/opinions.m4a",
                 next: {
                     tag: "人物台詞",
                     name: "憤怒的群眾",
@@ -413,7 +423,8 @@
                     "耶利哥遺址出土城牆、房屋、道路遺跡。",
                     "出土稅收文書、貨幣、香脂容器等文物。",
                     "證實當時貿易繁榮，社會結構與聖經相符。"
-                ]
+                ],
+                media: "assets/Zacchaeus/Voice/artifacts.m4a"
             },
             scene: {
                 tag: "人物角色",
@@ -495,6 +506,16 @@
             const hasNext = !!(activeEntry && activeEntry.next);
             document.getElementById("prev-btn").hidden = !(hasNext && activePage === 1);
             document.getElementById("next-btn").hidden = !(hasNext && activePage === 0);
+
+            const mediaEl = document.getElementById("npc-media");
+            mediaEl.onerror = () => { mediaEl.removeAttribute("src"); };
+            if (page.media) {
+                mediaEl.src = page.media;
+                mediaEl.play().catch(() => {});
+            } else {
+                mediaEl.pause();
+                mediaEl.removeAttribute("src");
+            }
 
             setDialogOpen(true);
             typeWriterEffect(dialogTextEl, page.text);

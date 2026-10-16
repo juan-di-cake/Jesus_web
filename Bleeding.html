@@ -299,6 +299,7 @@
                     "擁擠人群",
                     "市集商舖"
                 ],
+                media: "assets/Bleeding/Voice/street.m4a",
                 next: {
                     tag: "人物台詞",
                     name: "門徒",
@@ -314,6 +315,7 @@
                     "經文：民數記 15:38-40；申命記 22:12",
                     "她摸的不只是衣角，更是信心抓住神的應許。"
                 ],
+                media: "assets/Bleeding/Voice/tassel.m4a",
                 next: {
                     tag: "物件台詞",
                     name: "外袍的繸子",
@@ -331,6 +333,7 @@
                     "醫藥袋",
                     "當時常見治療方式：草藥、油膏、飲食調整、祈禱等。（聖經未記載她接受哪些具體治療方式。）"
                 ],
+                media: "assets/Bleeding/Voice/medicine.m4a",
                 next: {
                     tag: "物件台詞",
                     name: "醫療器具與草藥缽",
@@ -345,7 +348,8 @@
                     "長期出血",
                     "身體虛弱",
                     "花盡積蓄"
-                ]
+                ],
+                media: "assets/Bleeding/Voice/illness.m4a"
             },
             seq: {
                 tag: "經過",
@@ -370,7 +374,8 @@
                     "自認不潔",
                     "不敢打擾耶穌",
                     "相信只要摸衣裳就能得醫治"
-                ]
+                ],
+                media: "assets/Bleeding/Voice/secret.m4a"
             },
             7: {
                 tag: "律法",
@@ -488,6 +493,16 @@
             const hasNext = !!(activeEntry && activeEntry.next);
             document.getElementById("prev-btn").hidden = !(hasNext && activePage === 1);
             document.getElementById("next-btn").hidden = !(hasNext && activePage === 0);
+
+            const mediaEl = document.getElementById("npc-media");
+            mediaEl.onerror = () => { mediaEl.removeAttribute("src"); };
+            if (page.media) {
+                mediaEl.src = page.media;
+                mediaEl.play().catch(() => {});
+            } else {
+                mediaEl.pause();
+                mediaEl.removeAttribute("src");
+            }
 
             setDialogOpen(true);
             typeWriterEffect(dialogTextEl, page.text);

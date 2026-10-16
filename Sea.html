@@ -4,109 +4,269 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>平靜風和海：考古與細節統整表</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Noto+Serif+TC:wght@500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html {
-            width: 100vw;
-            height: 100vh;
+
+        html, body {
+            width: 100%;
+            height: 100%;
             overflow: hidden;
-            background-color: #000;
-            font-family: 'Noto Serif TC', 'PingFang TC', serif;
-            user-select: none;
-            color: #f3f4f6;
+            overscroll-behavior: none;
+        }
+
+        body {
+            background: #140e0a;
+            color: #3a2415;
+            font-family: "Noto Serif TC", "PingFang TC", "PMingLiU", serif;
+            line-height: 1.35;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .stage-container {
-            aspect-ratio: 1024 / 572;
-            width: min(100vw, calc(100vh * 1024 / 572));
+
+        .stage {
             position: relative;
-            background: #0d0b09;
+            aspect-ratio: 1024 / 572;
+            width: min(100%, calc(100vh * 1024 / 572));
+            max-height: 100%;
+            min-width: 0;
+            background: #f3e6c8;
+            container-type: size;
+            overflow: hidden;
         }
-        .poster {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
+
+        .masthead {
+            position: absolute;
+            left: 1.2%;
+            top: 1.6%;
+            width: 70.5%;
+            height: 19.2%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             pointer-events: none;
         }
-        .hotspot {
-            position: absolute;
-            background: transparent;
-            border: 2px solid transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            padding: 0;
+
+        .kicker {
+            color: #6b4a2a;
+            font-size: clamp(9px, 2.1cqh, 14px);
+            font-weight: 700;
+            letter-spacing: 0.12em;
         }
-        .hotspot:hover,
-        .hotspot:focus-visible {
-            border-color: #f59e0b;
-            box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.45), 0 0 18px rgba(245, 158, 11, 0.55);
+
+        h1 {
+            margin-top: 0.3cqh;
+            color: #3a2415;
+            font-size: clamp(14px, 4.4cqh, 32px);
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            line-height: 1.2;
+        }
+
+        .lede {
+            margin-top: 0.5cqh;
+            color: #4a301c;
+            font-size: clamp(9px, 2.15cqh, 15px);
+            line-height: 1.45;
+        }
+
+        .frame {
+            position: absolute;
+            z-index: 1;
+            padding: 0;
+            border: 0;
+            background: #efe2c6;
+            color: inherit;
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+            overflow: hidden;
+            transform-origin: center;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        .frame:hover,
+        .frame:focus-visible {
+            z-index: 8;
+            transform: scale(1.12);
+            box-shadow: 0 0 0 3px #f5c518;
             outline: none;
         }
+
+        .frame.is-selected {
+            z-index: 7;
+            box-shadow: 0 0 0 3px #f5c518;
+        }
+
+        .frame:hover.is-selected,
+        .frame:focus-visible.is-selected {
+            z-index: 8;
+            transform: scale(1.12);
+        }
+
+        .shot {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .caption {
+            position: absolute;
+            z-index: 1;
+            top: 0.55cqh;
+            left: 0.55cqw;
+            right: 0.55cqw;
+            padding: 0.28cqh 0.45cqw;
+            background: rgba(243, 230, 200, 0.9);
+            color: #3a2415;
+            font-size: clamp(8px, 2.15cqh, 14px);
+            font-weight: 900;
+            line-height: 1.25;
+            pointer-events: none;
+        }
+
+        .hero { left: 24.9%; top: 21.4%; width: 49.2%; height: 46.8%; }
+        .f1 { left: 0; top: 21.4%; width: 25.4%; height: 17%; }
+        .f2 { left: 0; top: 38.1%; width: 25.4%; height: 30.1%; }
+        .f3 { left: 0; top: 67.85%; width: 20.3%; height: 24.3%; }
+        .f4 { left: 73.75%; top: 0; width: 26.25%; height: 23.2%; }
+        .f5 { left: 73.75%; top: 22.9%; width: 26.25%; height: 22.8%; }
+        .f6 { left: 73.75%; top: 45.4%; width: 26.25%; height: 22.8%; }
+        .f7 { left: 19.9%; top: 67.85%; width: 20.3%; height: 24.3%; }
+        .f8 { left: 39.9%; top: 67.85%; width: 20.3%; height: 24.3%; }
+        .f9 { left: 59.9%; top: 67.85%; width: 20.3%; height: 24.3%; }
+        .f10 { left: 79.7%; top: 67.85%; width: 20.3%; height: 24.3%; }
+
+        .footnote {
+            position: absolute;
+            z-index: 2;
+            left: 0;
+            top: 91.9%;
+            width: 100%;
+            height: 8.1%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 1.2cqw;
+            background: #3a2415;
+            color: #f6e6c4;
+            font-size: clamp(8px, 2cqh, 14px);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            line-height: 1.35;
+            text-align: center;
+            pointer-events: none;
+        }
+
         .typing-cursor::after {
-            content: '|';
+            content: "|";
             animation: blink 0.8s infinite;
             color: #f59e0b;
             font-weight: 900;
         }
+
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
+
+        #dialog-box {
+            transform: translateY(110%);
+            transition: transform 0.3s ease;
+        }
+
+        #dialog-box.is-open { transform: translateY(0); }
+
+        #dialog-scroll { max-height: 22vh; overflow-y: auto; }
+        #dialog-scroll::-webkit-scrollbar,
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(217, 163, 67, 0.45);
+            border-radius: 4px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .frame,
+            #dialog-box,
+            #loading-screen { transition: none; }
+            .frame:hover,
+            .frame:focus-visible,
+            .frame:hover.is-selected,
+            .frame:focus-visible.is-selected { transform: none; }
+            .typing-cursor::after { animation: none; }
+        }
     </style>
 </head>
 <body>
-    <div id="loading-screen" class="fixed inset-0 z-[200] bg-[#0c0a08] flex flex-col items-center justify-center text-white transition-opacity duration-500 ease-in-out">
-        <div class="relative w-14 h-14 mb-3">
-            <div class="absolute inset-0 border-4 border-amber-900/30 rounded-full"></div>
-            <div class="absolute inset-0 border-4 border-amber-500 rounded-full border-t-transparent animate-spin"></div>
-        </div>
-        <h2 class="text-xl font-bold text-amber-400 mb-1 tracking-widest drop-shadow-md">平靜風和海</h2>
-        <p class="text-amber-200/60 text-xs font-medium tracking-wide">馬可福音 4:35-41　<span id="loading-progress" class="text-amber-400 font-bold">0%</span></p>
+    <div id="loading-screen" style="position:fixed;inset:0;z-index:200;background:#140e0a;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;transition:opacity .5s ease;">
+        <div style="width:3.5rem;height:3.5rem;border:4px solid rgba(120,80,20,.35);border-top-color:#f59e0b;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:.8rem;"></div>
+        <h2 style="font-size:1.25rem;font-weight:700;color:#fbbf24;letter-spacing:.2em;margin-bottom:.25rem;">平靜風和海</h2>
+        <p style="color:rgba(253,230,138,.7);font-size:.8rem;">馬可福音 4:35-41　<span id="loading-progress" style="color:#fbbf24;font-weight:700;">0%</span></p>
     </div>
 
-    <div class="stage-container" id="stage">
-        <img id="poster" class="poster" src="assets/sea/poster.png" alt="平靜風和海：考古與細節統整表">
-        <button class="hotspot" style="left:0.8%;top:22.2%;width:23.8%;height:17.0%;" data-frame="1" title="1. 加利利湖：地理與特色"></button>
-        <button class="hotspot" style="left:0.8%;top:39.6%;width:23.8%;height:28.2%;" data-frame="2" title="2. 為何常有致命暴風？"></button>
-        <button class="hotspot" style="left:0.7%;top:68.6%;width:18.6%;height:22.4%;" data-frame="3" title="3. 漁業與經濟命脈"></button>
-        <button class="hotspot" style="left:73.2%;top:3.2%;width:26.0%;height:21.8%;" data-frame="4" title="4. 角色服裝與打扮"></button>
-        <button class="hotspot" style="left:73.2%;top:25.4%;width:26.0%;height:20.4%;" data-frame="5" title="5. 舊約背景：只有神能掌管海"></button>
-        <button class="hotspot" style="left:73.2%;top:46.2%;width:26.0%;height:21.8%;" data-frame="6" title="6. 耶穌的權柄"></button>
-        <button class="hotspot" style="left:20.2%;top:68.6%;width:18.6%;height:22.4%;" data-frame="7" title="7. 船上角色分工與狀態"></button>
-        <button class="hotspot" style="left:40.0%;top:68.6%;width:18.8%;height:22.4%;" data-frame="8" title="8. 第一世紀加利利漁船"></button>
-        <button class="hotspot" style="left:59.8%;top:68.6%;width:18.8%;height:22.4%;" data-frame="9" title="9. 船隻裝備與實物道具"></button>
-        <button class="hotspot" style="left:79.6%;top:68.6%;width:19.6%;height:22.4%;" data-frame="10" title="10. 相關考古小知識"></button>
+    <div class="stage" id="stage">
+        <header class="masthead">
+            <p class="kicker">馬可福音 4:35-41</p>
+            <h1>平靜風和海：考古與細節統整表</h1>
+            <p class="lede">加利利湖是第一世紀重要的漁業與交通樞紐，但其獨特的盆地地形常引發致命的突發暴風，讓世世代生長於此的子民對這片深水充滿敬畏。</p>
+        </header>
+
+        <button class="frame hero" data-frame="scene" title="平靜風和海">
+            <img class="shot" src="assets/sea/panels/storm.jpg" alt="">
+        </button>
+        <button class="frame f1" data-frame="1" title="1. 加利利湖：地理與特色"><img class="shot" src="assets/sea/panels/01-map.jpg" alt=""><span class="caption">1. 加利利湖：地理與特色</span></button>
+        <button class="frame f2" data-frame="2" title="2. 為何常有致命暴風？"><img class="shot" src="assets/sea/panels/02-wind.jpg" alt=""><span class="caption">2. 為何常有致命暴風？</span></button>
+        <button class="frame f3" data-frame="3" title="3. 漁業與經濟命脈"><img class="shot" src="assets/sea/panels/03-fishing.jpg" alt=""><span class="caption">3. 漁業與經濟命脈</span></button>
+        <button class="frame f4" data-frame="4" title="4. 角色服裝與打扮"><img class="shot" src="assets/sea/panels/04-clothing.jpg" alt=""><span class="caption">4. 角色服裝與打扮</span></button>
+        <button class="frame f5" data-frame="5" title="5. 舊約背景：只有神能掌管海"><img class="shot" src="assets/sea/panels/05-sea.jpg" alt=""><span class="caption">5. 舊約背景：只有神能掌管海</span></button>
+        <button class="frame f6" data-frame="6" title="6. 耶穌的權柄"><img class="shot" src="assets/sea/panels/06-authority.jpg" alt=""><span class="caption">6. 耶穌的權柄</span></button>
+        <button class="frame f7" data-frame="7" title="7. 船上角色分工與狀態"><img class="shot" src="assets/sea/panels/07-roles.jpg" alt=""><span class="caption">7. 船上角色分工與狀態</span></button>
+        <button class="frame f8" data-frame="8" title="8. 第一世紀加利利漁船"><img class="shot" src="assets/sea/panels/08-boat.jpg" alt=""><span class="caption">8. 第一世紀加利利漁船</span></button>
+        <button class="frame f9" data-frame="9" title="9. 船隻裝備與實物道具"><img class="shot" src="assets/sea/panels/09-gear.jpg" alt=""><span class="caption">9. 船隻裝備與實物道具</span></button>
+        <button class="frame f10" data-frame="10" title="10. 相關考古小知識"><img class="shot" src="assets/sea/panels/10-artifacts.jpg" alt=""><span class="caption">10. 相關考古小知識</span></button>
+
+        <p class="footnote">核心信息：耶穌不只平靜風浪，更掌管我們生命中的風浪。當我們害怕時，祂仍在船上，並且有權柄賜下帶來平安。</p>
     </div>
 
-    <div id="dialog-box" class="fixed bottom-0 left-0 w-full bg-[#14100c]/95 backdrop-blur-md border-t-2 border-amber-500/80 text-amber-50 p-4 sm:p-5 shadow-[0_-10px_35px_rgba(0,0,0,0.85)] transition-transform duration-300 ease-out transform translate-y-full z-50">
-        <div class="max-w-4xl mx-auto relative">
-            <div class="flex justify-between items-start mb-2 border-b border-amber-900/60 pb-2">
-                <div class="flex items-center gap-3">
-                    <span id="dialog-tag" class="px-2.5 py-0.5 text-xs font-bold bg-amber-500 text-black rounded tracking-wider">地理</span>
-                    <h3 id="dialog-name" class="text-amber-300 font-bold text-lg sm:text-xl tracking-wide drop-shadow">主題名稱</h3>
+    <div id="dialog-box" style="position:fixed;left:0;bottom:0;width:100%;background:#16110c;border-top:2px solid rgba(245,158,11,.8);color:#fffbeb;padding:1rem 1.15rem 1.15rem;box-shadow:0 -10px 35px rgba(0,0,0,.85);z-index:50;">
+        <div style="max-width:56rem;margin:0 auto;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;margin-bottom:.5rem;padding-bottom:.45rem;border-bottom:1px solid rgba(120,70,20,.55);">
+                <div style="display:flex;align-items:center;gap:.6rem;min-width:0;">
+                    <span id="dialog-tag" style="flex:0 0 auto;padding:.1rem .55rem;font-size:.72rem;font-weight:700;background:#f59e0b;color:#1a120c;border-radius:.25rem;letter-spacing:.04em;">地理</span>
+                    <h3 id="dialog-name" style="color:#fcd34d;font-size:1.15rem;font-weight:700;letter-spacing:.04em;">主題名稱</h3>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="skipTyping()" id="skip-btn" class="text-xs text-amber-400/80 hover:text-amber-300 bg-amber-950/60 px-2 py-1 rounded border border-amber-700/40 transition">展開全文</button>
-                    <button onclick="closeDialog()" class="text-amber-300/70 hover:text-amber-100 bg-amber-900/40 hover:bg-amber-800/80 rounded-full w-7 h-7 flex items-center justify-center text-sm transition">✕</button>
+                <div style="display:flex;align-items:center;gap:.4rem;flex:0 0 auto;">
+                    <button type="button" id="skip-btn" style="font-size:.75rem;color:rgba(252,211,77,.85);background:rgba(69,36,8,.65);padding:.2rem .5rem;border-radius:.25rem;border:1px solid rgba(180,120,40,.45);cursor:pointer;">展開全文</button>
+                    <button type="button" id="close-btn" style="color:rgba(252,211,77,.8);background:rgba(120,70,20,.4);border:0;border-radius:999px;width:1.7rem;height:1.7rem;cursor:pointer;">✕</button>
                 </div>
             </div>
-            <audio id="npc-media" class="hidden"></audio>
-            <div class="min-h-[3.5rem] text-sm sm:text-base leading-relaxed text-stone-200">
-                <p id="dialog-text" class="typing-cursor inline"></p>
+            <audio id="npc-media" hidden></audio>
+            <div id="dialog-scroll">
+                <p id="dialog-text" class="typing-cursor" style="display:block;font-size:1rem;line-height:1.7;color:#e7e5e4;"></p>
             </div>
-            <div id="dialog-extra" class="mt-3 pt-2 border-t border-amber-900/40 flex flex-wrap gap-2 text-xs text-amber-300/90"></div>
+            <div id="dialog-extra" style="margin-top:.7rem;padding-top:.45rem;border-top:1px solid rgba(120,70,20,.4);display:flex;flex-wrap:wrap;gap:.4rem;"></div>
         </div>
     </div>
+
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
 
     <script>
         const frameData = {
+            scene: {
+                tag: "場景",
+                name: "平靜風和海",
+                text: "耶穌斥責風浪。門徒掌舵。門徒舀水。驚濤駭浪。加利利海盆地。耶穌不只平靜風浪，更掌管我們生命中的風浪。當我們害怕時，祂仍在船上，並且有權柄賜下帶來平安。",
+                points: ["耶穌斥責風浪", "門徒掌舵", "門徒舀水", "驚濤駭浪", "加利利海盆地"]
+            },
             1: {
                 tag: "地理",
                 name: "1. 加利利湖：地理與特色",
@@ -179,73 +339,90 @@
             }
         };
 
-        const poster = document.getElementById("poster");
+        const images = document.querySelectorAll(".shot");
         const progressText = document.getElementById("loading-progress");
         const loadingScreen = document.getElementById("loading-screen");
+        let loadedResources = 0;
 
-        function finishLoading() {
-            progressText.textContent = "100%";
-            loadingScreen.classList.add("opacity-0");
-            setTimeout(() => { loadingScreen.style.display = "none"; }, 400);
+        function updateProgress() {
+            loadedResources++;
+            progressText.textContent = Math.min(100, Math.floor((loadedResources / images.length) * 100)) + "%";
+            if (loadedResources >= images.length) {
+                setTimeout(() => {
+                    loadingScreen.style.opacity = "0";
+                    setTimeout(() => { loadingScreen.style.display = "none"; }, 400);
+                }, 200);
+            }
         }
 
-        if (poster.complete && poster.naturalWidth !== 0) {
-            finishLoading();
-        } else {
-            progressText.textContent = "40%";
-            poster.addEventListener("load", finishLoading);
-            poster.addEventListener("error", finishLoading);
-        }
+        images.forEach((img) => {
+            if (img.complete && img.naturalWidth !== 0) updateProgress();
+            else {
+                img.addEventListener("load", updateProgress);
+                img.addEventListener("error", updateProgress);
+            }
+        });
 
         let typingInterval = null;
         let currentFullText = "";
 
-        document.querySelectorAll(".hotspot").forEach((button) => {
-            button.addEventListener("click", () => {
-                const data = frameData[button.dataset.frame];
-                if (data) showDialog(data.tag, data.name, data.text, data.points, data.media);
-            });
+        document.querySelectorAll("[data-frame]").forEach((frame) => {
+            frame.addEventListener("click", () => openFrame(frame.dataset.frame));
         });
 
-        function showDialog(tag, name, text, points = [], mediaSrc = "") {
+        document.getElementById("close-btn").addEventListener("click", closeDialog);
+        document.getElementById("skip-btn").addEventListener("click", skipTyping);
+
+        function openFrame(id) {
+            const data = frameData[id];
+            if (!data) return;
+            document.querySelectorAll("[data-frame]").forEach((frame) => {
+                frame.classList.toggle("is-selected", frame.dataset.frame === id);
+            });
+            showDialog(data);
+        }
+
+        function showDialog(data) {
             resetMedia();
-            const dialogBox = document.getElementById("dialog-box");
-            document.getElementById("dialog-tag").textContent = tag || "考據";
-            document.getElementById("dialog-name").textContent = name;
+            document.getElementById("dialog-tag").textContent = data.tag || "考據";
+            document.getElementById("dialog-name").textContent = data.name;
             const dialogTextEl = document.getElementById("dialog-text");
             dialogTextEl.textContent = "";
-            currentFullText = text;
+            currentFullText = data.text;
 
             const extraContainer = document.getElementById("dialog-extra");
             extraContainer.innerHTML = "";
-            points.forEach((pt) => {
+            (data.points || []).forEach((pt) => {
                 const badge = document.createElement("span");
-                badge.className = "bg-amber-950/80 text-amber-200 border border-amber-700/50 px-2 py-0.5 rounded text-xs";
-                badge.textContent = `✦ ${pt}`;
+                badge.style.cssText = "background:rgba(69,26,8,.85);color:#fde68a;border:1px solid rgba(180,120,40,.5);padding:.1rem .45rem;border-radius:.25rem;font-size:.75rem;";
+                badge.textContent = "✦ " + pt;
                 extraContainer.appendChild(badge);
             });
 
             const mediaEl = document.getElementById("npc-media");
             mediaEl.onerror = () => {
                 mediaEl.removeAttribute("src");
-                mediaEl.classList.add("hidden");
             };
-            if (mediaSrc) {
-                mediaEl.src = mediaSrc;
-                mediaEl.classList.add("hidden");
+            if (data.media) {
+                mediaEl.src = data.media;
                 mediaEl.play().catch(() => {});
             } else {
-                mediaEl.classList.add("hidden");
                 mediaEl.removeAttribute("src");
             }
 
-            dialogBox.classList.remove("translate-y-full");
-            typeWriterEffect(dialogTextEl, text);
+            setDialogOpen(true);
+            typeWriterEffect(dialogTextEl, data.text);
         }
 
         function closeDialog() {
-            document.getElementById("dialog-box").classList.add("translate-y-full");
+            setDialogOpen(false);
+            document.querySelectorAll("[data-frame]").forEach((frame) => frame.classList.remove("is-selected"));
             resetMedia();
+        }
+
+        function setDialogOpen(open) {
+            const dialog = document.getElementById("dialog-box");
+            dialog.classList.toggle("is-open", open);
         }
 
         function skipTyping() {
@@ -253,16 +430,21 @@
             const dialogTextEl = document.getElementById("dialog-text");
             dialogTextEl.textContent = currentFullText;
             dialogTextEl.classList.remove("typing-cursor");
+            const scroller = document.getElementById("dialog-scroll");
+            scroller.scrollTop = scroller.scrollHeight;
         }
 
         function typeWriterEffect(element, text) {
             let i = 0;
             clearInterval(typingInterval);
             element.classList.add("typing-cursor");
+            const scroller = document.getElementById("dialog-scroll");
+            scroller.scrollTop = 0;
             typingInterval = setInterval(() => {
                 if (i < text.length) {
                     element.textContent += text.charAt(i);
                     i++;
+                    scroller.scrollTop = scroller.scrollHeight;
                 } else {
                     clearInterval(typingInterval);
                     element.classList.remove("typing-cursor");
@@ -275,14 +457,13 @@
             const mediaEl = document.getElementById("npc-media");
             if (!mediaEl) return;
             mediaEl.pause();
-            try { mediaEl.currentTime = 0; } catch (e) {}
+            try { if (mediaEl.readyState > 0) mediaEl.currentTime = 0; } catch (e) {}
         }
 
         document.addEventListener("keydown", (e) => {
-            const dialogBox = document.getElementById("dialog-box");
-            if (e.key === "Escape") {
-                closeDialog();
-            } else if (e.key === " " && !dialogBox.classList.contains("translate-y-full")) {
+            const open = document.getElementById("dialog-box").classList.contains("is-open");
+            if (e.key === "Escape") closeDialog();
+            else if (e.key === " " && open) {
                 e.preventDefault();
                 skipTyping();
             }

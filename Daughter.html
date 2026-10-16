@@ -33,50 +33,55 @@
 
         /* 滿版自適應等比畫布 (嚴格鎖定 16:9) */
         .stage-container {
-            width: 100vw;
-            height: 56.25vw; /* 100 * 9 / 16 */
-            max-height: 100vh;
-            max-width: 177.78vh; /* 100 * 16 / 9 */
+            width: min(100vw, calc(100vh * 16 / 9));
+            height: min(100vh, calc(100vw * 9 / 16));
             position: relative;
-            background: #0d0b09;
-            padding: 4px;
+            background: #f3e6c8;
+            container-type: size;
         }
 
-        /* 依原圖分割比例切分網格佈局 */
         .grid-container {
             display: grid;
             width: 100%;
             height: 100%;
             grid-template-columns: 382fr 111fr 565fr 382fr;
             grid-template-rows: 277fr 235fr 63fr 161fr 77fr 211fr;
-            gap: 4px;
+            gap: 0;
         }
 
-        /* 共用 Frame 設定 */
         .frame {
             position: relative;
-            background: #1e1914;
+            z-index: 1;
+            background: #efe2c6;
             overflow: hidden;
             cursor: pointer;
-            border-radius: 4px;
-            border: 1px solid rgba(212, 163, 89, 0.25);
-            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), 
-                        box-shadow 0.25s ease, 
-                        border-color 0.25s ease, 
-                        z-index 0s;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+            border: 0;
+            padding: 0;
+            transform-origin: center;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
         }
 
-        /* 滑鼠 Hover 選取回饋 */
-        .frame:hover {
-            transform: scale(1.018); 
-            border-color: #f59e0b;
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6), inset 0 0 10px rgba(245, 158, 11, 0.25);
-            z-index: 30;
+        .frame:hover,
+        .frame:focus-visible {
+            transform: scale(1.12);
+            box-shadow: 0 0 0 3px #f5c518;
+            z-index: 8;
+            outline: none;
         }
 
-        .frame:active {
-            transform: scale(0.99);
+        .caption {
+            position: absolute;
+            z-index: 1;
+            top: 0.5cqh;
+            left: 0.5cqw;
+            right: 0.5cqw;
+            padding: 0.25cqh 0.4cqw;
+            background: rgba(243, 230, 200, 0.9);
+            color: #3a2415;
+            font-size: clamp(8px, 1.8cqh, 14px);
+            font-weight: 900;
+            line-height: 1.2;
+            pointer-events: none;
         }
 
         /* 圖片填滿 Frame */
@@ -86,13 +91,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: fill; 
+            object-fit: cover; 
             pointer-events: none; 
             transition: filter 0.25s ease;
         }
 
-        .frame:hover .media-content {
-            filter: brightness(1.04) contrast(1.02);
+        @media (prefers-reduced-motion: reduce) {
+            .frame:hover,
+            .frame:focus-visible { transform: none; }
         }
 
         /* 精確網格格位對應 (九宮/十格完整排版) */
@@ -149,52 +155,52 @@
         <div class="grid-container" id="canvas-wrapper">
             <!-- 1. 睚魯是誰？ -->
             <div class="frame frame-1" onclick="handleFrameClick(1)" title="1. 睚魯是誰？">
-                <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Jairus.png" alt="1. 睚魯是誰？" onerror="handleImgFallback(this, '1. 睚魯是誰？\n會堂主管')">
+                <img class="media-content" src="assets/Daughter/panels/01-jairus.jpg" alt=""><span class="caption">1. 睚魯是誰？</span>
             </div>
 
             <!-- 3. 猶太人的喪葬文化 -->
             <div class="frame frame-2" onclick="handleFrameClick(2)" title="3. 猶太人的喪葬文化">
-                <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Culture.png" alt="3. 猶太人的喪葬文化" onerror="handleImgFallback(this, '3. 猶太人的喪葬文化\n吹笛與哭喪')">
+                <img class="media-content" src="assets/Daughter/panels/02-funeral.jpg" alt=""><span class="caption">3. 猶太人的喪葬文化</span>
             </div>
 
             <!-- 2. 十二歲的女孩 -->
             <div class="frame frame-3" onclick="handleFrameClick(3)" title="2. 十二歲的女孩">
-                <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Girl.png" alt="2. 十二歲的女孩" onerror="handleImgFallback(this, '2. 十二歲的女孩\n家庭與社會地位')">
+                <img class="media-content" src="assets/Daughter/panels/03-girl.jpg" alt=""><span class="caption">2. 十二歲的女孩</span>
             </div>
 
             <!-- 4. 耶穌觸摸死人，有何意義？ -->
             <div class="frame frame-4" onclick="handleFrameClick(4)" title="4. 耶穌觸摸死人，有何意義？">
-                <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Meaning.png" alt="4. 耶穌觸摸死人，有何意義？" onerror="handleImgFallback(this, '4. 耶穌觸摸死人，有何意義？\n勝過死亡與律法')">
+                <img class="media-content" src="assets/Daughter/panels/04-touch.jpg" alt=""><span class="caption">4. 耶穌觸摸死人，有何意義？</span>
             </div>
 
             <!-- 5. 第一世紀加利利住宅 -->
             <div class="frame frame-5" onclick="handleFrameClick(5)" title="5. 第一世紀加利利住宅">
-                <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/House.png" alt="5. 第一世紀加利利住宅" onerror="handleImgFallback(this, '5. 第一世紀加利利住宅\n富裕人家建築結構')">
+                <img class="media-content" src="assets/Daughter/panels/05-house.jpg" alt=""><span class="caption">5. 第一世紀加利利住宅</span>
             </div>
 
             <!-- 9. 房間與家具細節 -->
             <div class="frame frame-6" onclick="handleFrameClick(6)" title="9. 房間與家具細節">
-                <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Furniture.png" alt="9. 房間與家具細節" onerror="handleImgFallback(this, '9. 房間與家具細節\n木床、油燈、低桌、木箱')">
+                <img class="media-content" src="assets/Daughter/panels/06-furniture.jpg" alt=""><span class="caption">9. 房間與家具細節</span>
             </div>
 
             <!-- 8. 舊約律法與背景 -->
             <div class="frame frame-7" onclick="handleFrameClick(7)" title="8. 舊約律法與背景">
-                <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Back7.png" alt="8. 舊約律法與背景" onerror="handleImgFallback(this, '8. 舊約律法與背景\n潔淨禮儀與生命')">
+                <img class="media-content" src="assets/Daughter/panels/07-law.jpg" alt=""><span class="caption">8. 舊約律法與背景</span>
             </div>
 
             <!-- 耶穌使女孩復活 (核心神蹟畫面) -->
             <div class="frame frame-8" onclick="handleFrameClick(8)" title="神蹟主圖：大利大，古米！">
-                <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/JesusAndGirl.png" alt="耶穌使女孩復活" onerror="handleImgFallback(this, '神蹟時刻：\n耶穌拉著女孩的手說：大利大，古米！')">
+                <img class="media-content" src="assets/Daughter/panels/08-miracle.jpg" alt=""><span class="caption">神蹟主圖：大利大，古米！</span>
             </div>
 
             <!-- 7. 考古發現的相關文物 -->
             <div class="frame frame-9" onclick="handleFrameClick(9)" title="7. 考古發現的相關文物">
-                <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Thing.png" alt="7. 考古發現的相關文物" onerror="handleImgFallback(this, '7. 考古發現的相關文物\n油燈、陶罐、石碗、經卷')">
+                <img class="media-content" src="assets/Daughter/panels/09-artifacts.jpg" alt=""><span class="caption">7. 考古發現的相關文物</span>
             </div>
 
             <!-- 6. 亞蘭文：「大利大，古米！」 -->
             <div class="frame frame-10" onclick="handleFrameClick(10)" title="6. 亞蘭文：大利大，古米！">
-                <img class="media-content" src="https://juan-di-cake.github.io/Jesus_web/assets/Daughter/Picture/Aramaic.png" alt="6. 亞蘭文：大利大，古米！" onerror="handleImgFallback(this, '6. 亞蘭文：大利大，古米！\nTalitha Koum')">
+                <img class="media-content" src="assets/Daughter/panels/10-aramaic.jpg" alt=""><span class="caption">6. 亞蘭文：大利大，古米！</span>
             </div>
         </div>
     </div>

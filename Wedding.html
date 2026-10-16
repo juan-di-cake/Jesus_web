@@ -21,71 +21,79 @@
         body { display: flex; align-items: center; justify-content: center; }
         .stage {
             position: relative;
-            aspect-ratio: 16 / 9;
-            width: min(100%, calc(100vh * 16 / 9));
+            aspect-ratio: 1024 / 596;
+            width: min(100%, calc(100vh * 1024 / 596));
             max-height: 100%;
-            background: #f3e6c8;
+            background: #d7c4a2;
             container-type: size;
             overflow: hidden;
         }
-        .masthead {
+        .poster {
             position: absolute;
-            left: 0; top: 0; width: 100%; height: 8%;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 1.2cqw;
-            z-index: 3;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
         }
-        h1 {
-            font-size: clamp(14px, 3.6cqh, 28px);
-            font-weight: 900;
-            letter-spacing: 0.06em;
+        .poster.glow { opacity: 0; }
+        .stage[data-glow="bride"] .glow[data-glow="bride"],
+        .stage[data-glow="groom"] .glow[data-glow="groom"],
+        .stage[data-glow="guest"] .glow[data-glow="guest"],
+        .stage[data-glow="seating"] .glow[data-glow="seating"],
+        .stage[data-glow="lamp"] .glow[data-glow="lamp"],
+        .stage[data-glow="food"] .glow[data-glow="food"],
+        .stage[data-glow="jars"] .glow[data-glow="jars"],
+        .stage[data-glow="master"] .glow[data-glow="master"],
+        .stage[data-glow="servant"] .glow[data-glow="servant"] {
+            opacity: 1;
         }
-        .flow {
+        .hotspot {
+            position: absolute;
+            z-index: 2;
             border: 0;
-            background: #3a2415;
-            color: #f6e6c4;
-            font: inherit;
-            font-size: clamp(10px, 2cqh, 15px);
-            font-weight: 700;
-            padding: 0.4cqh 0.8cqw;
+            background: transparent;
             cursor: pointer;
-        }
-        .flow:focus-visible { outline: 2px solid #f5c518; }
-        .grid {
-            position: absolute;
-            left: 0; top: 8%; width: 100%; height: 92%;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: 1fr 1fr;
-        }
-        .frame {
-            position: relative;
-            z-index: 1;
-            border: 0;
             padding: 0;
-            background: #efe2c6;
-            overflow: hidden;
-            cursor: pointer;
-            transform-origin: center;
-            transition: transform 0.22s ease, box-shadow 0.22s ease;
         }
-        .frame:hover, .frame:focus-visible, .frame:hover.is-selected, .frame:focus-visible.is-selected {
+        .hotspot:hover,
+        .hotspot:focus-visible,
+        .hotspot.is-selected {
             z-index: 8;
-            transform: scale(1.12);
-            box-shadow: 0 0 0 3px #f5c518;
             outline: none;
         }
-        .frame.is-selected { z-index: 7; box-shadow: 0 0 0 3px #f5c518; }
-        .shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-        .caption {
-            position: absolute; z-index: 1; top: 0.6cqh; left: 0.6cqw; right: 0.6cqw;
-            padding: 0.3cqh 0.45cqw;
-            background: rgba(243, 230, 200, 0.9);
-            color: #3a2415;
-            font-size: clamp(9px, 2cqh, 15px);
-            font-weight: 900;
-            line-height: 1.2;
-            pointer-events: none;
+        .bride   { left: 1%;    top: 13.5%; width: 15.4%; height: 66%; }
+        .groom   { left: 16.4%; top: 11%;   width: 14%;   height: 34.5%; }
+        .guest   { left: 18%;   top: 44.5%; width: 14.6%; height: 46%; z-index: 4; }
+        .seating { left: 33%;   top: 14.5%; width: 31.4%; height: 38%; z-index: 1; }
+        .lamp    { left: 34.8%; top: 50%;   width: 11.6%; height: 39%; z-index: 5; }
+        .food    { left: 46.8%; top: 54%;   width: 24%;   height: 37%; z-index: 3; }
+        .jars    { left: 63.2%; top: 8.5%;  width: 17.4%; height: 35%; }
+        .master  { left: 80.8%; top: 11.5%; width: 17.4%; height: 41%; z-index: 3; }
+        .servant { left: 72.8%; top: 47%;   width: 25.6%; height: 44%; z-index: 4; }
+        .flow-btn {
+            position: absolute;
+            z-index: 9;
+            top: 0.7%;
+            right: 0.7%;
+            width: 5.2cqh;
+            height: 5.2cqh;
+            border: 0;
+            border-radius: 50%;
+            background: #3a2415;
+            color: #f6e6c4;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 0 0 2px #d4920a;
+        }
+        .flow-btn svg { width: 58%; height: 58%; }
+        .flow-btn:hover,
+        .flow-btn:focus-visible,
+        .flow-btn.is-selected {
+            background: #5a3a22;
+            box-shadow: 0 0 0 3px #f5c518;
+            outline: none;
         }
         #dialog-box {
             position: fixed; left: 0; bottom: 0; width: 100%;
@@ -99,8 +107,7 @@
         .typing-cursor::after { content: "|"; animation: blink 0.8s infinite; color: #f59e0b; font-weight: 900; }
         @keyframes blink { 50% { opacity: 0; } }
         @media (prefers-reduced-motion: reduce) {
-            .frame, #dialog-box { transition: none; }
-            .frame:hover, .frame:focus-visible, .frame:hover.is-selected, .frame:focus-visible.is-selected { transform: none; }
+            #dialog-box { transition: none; }
             .typing-cursor::after { animation: none; }
         }
     </style>
@@ -108,23 +115,34 @@
 <body>
     <div id="loading-screen" style="position:fixed;inset:0;z-index:200;background:#140e0a;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;">
         <h2 style="color:#fbbf24;letter-spacing:.2em;">迦拿婚宴</h2>
-        <p style="color:rgba(253,230,138,.7);">圖稿載入中… <span id="loading-progress">0%</span></p>
+        <p style="color:rgba(253,230,138,.7);">底圖載入中…</p>
     </div>
     <div class="stage">
-        <header class="masthead">
-            <h1>迦拿婚宴</h1>
-            <button type="button" class="flow" id="flow-btn">婚禮流程</button>
-        </header>
-        <div class="grid">
-            <button type="button" class="frame" data-frame="bride" title="新娘"><img class="shot" src="assets/wedding/panels/bride.jpg" alt=""><span class="caption">新娘</span></button>
-            <button type="button" class="frame" data-frame="groom" title="新郎"><img class="shot" src="assets/wedding/panels/groom.jpg" alt=""><span class="caption">新郎</span></button>
-            <button type="button" class="frame" data-frame="guest" title="賓客"><img class="shot" src="assets/wedding/panels/guest.jpg" alt=""><span class="caption">賓客</span></button>
-            <button type="button" class="frame" data-frame="master" title="管筵席的人"><img class="shot" src="assets/wedding/panels/master.jpg" alt=""><span class="caption">管筵席的人</span></button>
-            <button type="button" class="frame" data-frame="servant" title="服侍的僕人"><img class="shot" src="assets/wedding/panels/servant.jpg" alt=""><span class="caption">服侍的僕人</span></button>
-            <button type="button" class="frame" data-frame="stone_jar" title="潔淨用石缸"><img class="shot" src="assets/wedding/panels/jars.jpg" alt=""><span class="caption">潔淨用石缸</span></button>
-            <button type="button" class="frame" data-frame="lamp" title="泥陶油燈"><img class="shot" src="assets/wedding/panels/lamp.jpg" alt=""><span class="caption">泥陶油燈</span></button>
-            <button type="button" class="frame" data-frame="food" title="器皿與食物"><img class="shot" src="assets/wedding/panels/food.jpg" alt=""><span class="caption">器皿與食物</span></button>
-        </div>
+        <img class="poster" id="poster" src="assets/wedding/poster.jpg" alt="">
+        <img class="poster glow" data-glow="bride" src="assets/wedding/glow/bride.jpg" alt="">
+        <img class="poster glow" data-glow="groom" src="assets/wedding/glow/groom.jpg" alt="">
+        <img class="poster glow" data-glow="guest" src="assets/wedding/glow/guest.jpg" alt="">
+        <img class="poster glow" data-glow="seating" src="assets/wedding/glow/seating.jpg" alt="">
+        <img class="poster glow" data-glow="lamp" src="assets/wedding/glow/lamp.jpg" alt="">
+        <img class="poster glow" data-glow="food" src="assets/wedding/glow/food.jpg" alt="">
+        <img class="poster glow" data-glow="jars" src="assets/wedding/glow/jars.jpg" alt="">
+        <img class="poster glow" data-glow="master" src="assets/wedding/glow/master.jpg" alt="">
+        <img class="poster glow" data-glow="servant" src="assets/wedding/glow/servant.jpg" alt="">
+        <button type="button" class="hotspot bride" data-frame="bride" data-glow="bride" title="新娘"></button>
+        <button type="button" class="hotspot groom" data-frame="groom" data-glow="groom" title="新郎"></button>
+        <button type="button" class="hotspot guest" data-frame="guest" data-glow="guest" title="賓客"></button>
+        <button type="button" class="hotspot seating" data-frame="seating" data-glow="seating" title="座席方式"></button>
+        <button type="button" class="hotspot lamp" data-frame="lamp" data-glow="lamp" title="燈具"></button>
+        <button type="button" class="hotspot food" data-frame="food" data-glow="food" title="器皿與食物"></button>
+        <button type="button" class="hotspot jars" data-frame="stone_jar" data-glow="jars" title="潔淨用石缸"></button>
+        <button type="button" class="hotspot master" data-frame="master" data-glow="master" title="管宴席的人"></button>
+        <button type="button" class="hotspot servant" data-frame="servant" data-glow="servant" title="僕人"></button>
+        <button type="button" class="flow-btn" data-frame="flow" title="婚禮流程" aria-label="婚禮流程">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M5 6h14M5 12h14M5 18h9"/>
+                <path d="M16 16l3 2-3 2"/>
+            </svg>
+        </button>
     </div>
     <div id="dialog-box">
         <div style="max-width:56rem;margin:0 auto;">
@@ -155,6 +173,10 @@
                 name: "🧔 賓客 (Guest)",
                 text: "這場婚宴太棒了！我們脫下皮革涼鞋，斜躺在這種『ㄇ字型 (Tri-clinium)』的座席上，真的是非常放鬆舒服。能這樣和親朋好友們一起吃喝快樂，慶祝這對新人的結合，真是太有福了！",
                 media: "guest.mp4"
+            },
+            seating: {
+                name: "座席方式",
+                text: "平民多使用地席、草席、靠墊與矮桌，非羅馬式躺椅。"
             },
             master: {
                 name: "🍷 管筵席的人",
@@ -187,36 +209,54 @@
             }
         };
 
-        const images = document.querySelectorAll(".shot");
-        const progressText = document.getElementById("loading-progress");
+        const poster = document.getElementById("poster");
         const loadingScreen = document.getElementById("loading-screen");
-        let loaded = 0;
-        function updateProgress() {
-            loaded++;
-            progressText.textContent = Math.min(100, Math.floor((loaded / images.length) * 100)) + "%";
-            if (loaded >= images.length) loadingScreen.style.display = "none";
+        const stage = document.querySelector(".stage");
+        const pictures = document.querySelectorAll(".poster");
+        let ready = 0;
+        function hideLoading() {
+            ready++;
+            if (ready >= pictures.length) loadingScreen.style.display = "none";
         }
-        images.forEach((img) => {
-            if (img.complete && img.naturalWidth) updateProgress();
+        pictures.forEach((img) => {
+            if (img.complete && img.naturalWidth) hideLoading();
             else {
-                img.addEventListener("load", updateProgress);
-                img.addEventListener("error", updateProgress);
+                img.addEventListener("load", hideLoading);
+                img.addEventListener("error", hideLoading);
             }
         });
 
         let typingInterval = null;
         let currentFullText = "";
+        let selectedGlow = "";
+
+        function showGlow(id) {
+            if (id) stage.dataset.glow = id;
+            else delete stage.dataset.glow;
+        }
 
         document.querySelectorAll("[data-frame]").forEach((frame) => {
+            frame.addEventListener("pointerenter", () => {
+                if (frame.dataset.glow) showGlow(frame.dataset.glow);
+            });
+            frame.addEventListener("pointerleave", () => showGlow(selectedGlow));
+            frame.addEventListener("focus", () => {
+                if (frame.dataset.glow) showGlow(frame.dataset.glow);
+            });
+            frame.addEventListener("blur", () => showGlow(selectedGlow));
             frame.addEventListener("click", () => openFrame(frame.dataset.frame));
         });
-        document.getElementById("flow-btn").addEventListener("click", () => openFrame("flow"));
         document.getElementById("close-btn").addEventListener("click", closeDialog);
         document.getElementById("skip-btn").addEventListener("click", skipTyping);
 
         function openFrame(id) {
             const data = frameData[id];
             if (!data) return;
+            const chosen = document.querySelector(`[data-frame="${id}"]`);
+            if (chosen && chosen.dataset.glow) {
+                selectedGlow = chosen.dataset.glow;
+                showGlow(selectedGlow);
+            }
             document.querySelectorAll("[data-frame]").forEach((frame) => {
                 frame.classList.toggle("is-selected", frame.dataset.frame === id);
             });
@@ -243,6 +283,8 @@
         function closeDialog() {
             document.getElementById("dialog-box").classList.remove("is-open");
             document.querySelectorAll("[data-frame]").forEach((frame) => frame.classList.remove("is-selected"));
+            selectedGlow = "";
+            showGlow("");
             resetMedia();
         }
 

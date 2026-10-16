@@ -11,204 +11,138 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         html, body {
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
+            overscroll-behavior: none;
             background: #140e0a;
-            font-family: 'Noto Serif TC', 'PingFang TC', serif;
+            font-family: "Noto Serif TC", "PingFang TC", serif;
             user-select: none;
             color: #3a2415;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
+        body { display: flex; align-items: center; justify-content: center; }
+
         .stage-container {
-            width: 100vw;
-            height: 66.6667vw;
-            max-height: 100vh;
-            max-width: 150vh;
             position: relative;
-            background:
-                radial-gradient(ellipse at center, #f8edd6 0%, #e7d3ae 72%, #d9c093 100%);
-            padding: 0.45%;
+            aspect-ratio: 1024 / 682;
+            width: min(100%, calc(100vh * 1024 / 682));
+            max-height: 100%;
+            min-width: 0;
+            background: #f3e6c8;
             container-type: size;
-            display: flex;
-            flex-direction: column;
-            gap: 0.45%;
+            overflow: hidden;
         }
 
         .masthead, .footnote {
-            flex: 0 0 auto;
-            text-align: center;
-            border-radius: 4px;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            pointer-events: none;
         }
 
         .masthead {
-            padding: 0.55cqw 1.4cqw 0.45cqw;
-            background: rgba(255, 248, 232, 0.72);
-            border: 1px solid rgba(92, 58, 20, 0.28);
+            left: 0;
+            top: 0;
+            width: 76.2%;
+            height: 17.6%;
+            padding: 0 1.4cqw;
         }
 
         .masthead h1 {
-            font-size: 2.15cqw;
-            font-weight: 900;
-            letter-spacing: 0.12em;
-            line-height: 1.25;
             color: #3a2415;
+            font-size: clamp(12px, 3.4cqh, 28px);
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            line-height: 1.15;
         }
 
-        .masthead p {
-            margin-top: 0.15cqw;
-            font-size: 1.05cqw;
-            font-weight: 600;
-            line-height: 1.45;
-            color: #5c4030;
+        .lede {
+            margin-top: 0.4cqh;
+            color: #4a301c;
+            font-size: clamp(8px, 1.8cqh, 14px);
+            line-height: 1.35;
         }
 
-        .board-slot {
-            flex: 1 1 auto;
-            min-height: 0;
-            container-type: size;
-            display: grid;
-            place-items: center;
-        }
-
-        .board {
-            width: min(100cqw, calc(100cqh * 514 / 335));
-            height: min(100cqh, calc(100cqw * 335 / 514));
-            display: flex;
-            flex-direction: column;
-            gap: 0.45cqw;
-        }
-
-        .top-row {
-            flex: 2157 1 0;
-            min-height: 0;
-            display: grid;
-            grid-template-columns: 100fr 302fr 112fr;
-            gap: 0.4cqw;
-        }
-
-        .stack {
-            min-height: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 0.4cqw;
-        }
-
-        .stack .frame { flex: 1 1 0; min-height: 0; }
-        .stack .frame[data-frame="1"] { flex-grow: 892; }
-        .stack .frame[data-frame="2"] { flex-grow: 690; }
-        .stack .frame[data-frame="3"] { flex-grow: 575; }
-        .stack .frame[data-frame="8"] { flex-grow: 710; }
-        .stack .frame[data-frame="9"] { flex-grow: 827; }
-        .stack .frame[data-frame="10"] { flex-grow: 620; }
-
-        .bottom-row {
-            flex: 1190 1 0;
-            min-height: 0;
-            display: grid;
-            grid-template-columns: 963fr 877fr 884fr 950fr 1466fr;
-            gap: 0.4cqw;
-        }
-
-        .center-tray {
-            min-height: 0;
-            display: grid;
-            grid-template-columns: 145fr 157fr;
-            gap: 0.4cqw;
-        }
-
-        .frame {
-            position: relative;
-            background: #f7edd8;
-            overflow: hidden;
-            cursor: pointer;
-            border-radius: 6px;
-            border: 1px solid rgba(92, 58, 20, 0.32);
-            box-shadow: 0 1px 3px rgba(58, 36, 21, 0.12);
-            transition: box-shadow 0.2s ease, border-color 0.2s ease;
-        }
-
-        .frame:hover,
-        .frame.is-selected,
-        .frame:focus-visible {
-            border-color: #d4920a;
-            box-shadow: 0 0 0 2px rgba(212, 146, 10, 0.85);
-            z-index: 5;
-            outline: none;
-        }
-
-        .media-content {
+        .shot {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            object-position: center;
+            object-fit: cover;
+            display: block;
+        }
+
+        .caption {
+            position: absolute;
+            z-index: 1;
+            top: 0.4cqh;
+            left: 0.4cqw;
+            right: 0.4cqw;
+            padding: 0.2cqh 0.35cqw;
+            background: rgba(243, 230, 200, 0.9);
+            color: #3a2415;
+            font-size: clamp(8px, 1.8cqh, 13px);
+            font-weight: 900;
+            line-height: 1.2;
             pointer-events: none;
         }
 
-        .center-tray .media-content { object-position: center bottom; }
-
-        .tax-card {
-            background:
-                linear-gradient(180deg, #fbf6ea 0%, #f3e6c8 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3% 5%;
-        }
-
-        .tax-inner {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 0.6cqw;
-        }
-
-        .tax-inner h2 {
-            font-size: 1.15cqw;
-            font-weight: 900;
-            letter-spacing: 0.03em;
-            line-height: 1.25;
-            color: #2c1b10;
-        }
-
-        .tax-inner ul {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.28cqw;
-        }
-
-        .tax-inner li {
-            font-size: 0.78cqw;
-            font-weight: 600;
-            line-height: 1.35;
-            color: #3d2a1c;
-            padding-left: 0.85cqw;
-            position: relative;
-        }
-
-        .tax-inner li::before {
-            content: "•";
+        .frame {
             position: absolute;
-            left: 0;
-            color: #6b4a2a;
+            z-index: 1;
+            padding: 0;
+            border: 0;
+            background: #efe2c6;
+            color: inherit;
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+            overflow: hidden;
+            transform-origin: center;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
         }
+
+        .frame:hover,
+        .frame:focus-visible {
+            z-index: 8;
+            transform: scale(1.12);
+            box-shadow: 0 0 0 3px #f5c518;
+            outline: none;
+        }
+
+        .frame.is-selected { z-index: 7; box-shadow: 0 0 0 3px #f5c518; }
+        .frame:hover.is-selected,
+        .frame:focus-visible.is-selected { z-index: 8; transform: scale(1.12); }
+
+        .frame[data-frame="1"] { left: 0; top: 17.2%; width: 24.8%; height: 31.4%; }
+        .frame[data-frame="2"] { left: 0; top: 48.2%; width: 24.8%; height: 26.6%; }
+        .frame[data-frame="3"] { left: 0; top: 74.4%; width: 24.8%; height: 19.6%; }
+        .frame[data-frame="scene"] { left: 24.4%; top: 17.2%; width: 52%; height: 49.4%; }
+        .frame[data-frame="8"] { left: 76%; top: 0; width: 24%; height: 22.8%; }
+        .frame[data-frame="9"] { left: 76%; top: 22.4%; width: 24%; height: 25.2%; }
+        .frame[data-frame="10"] { left: 76%; top: 47.2%; width: 24%; height: 19.4%; }
+        .frame[data-frame="4"] { left: 24.4%; top: 66.2%; width: 13.8%; height: 27.8%; }
+        .frame[data-frame="5"] { left: 37.8%; top: 66.2%; width: 14%; height: 27.8%; }
+        .frame[data-frame="6"] { left: 51.4%; top: 66.2%; width: 13.2%; height: 27.8%; }
+        .frame[data-frame="7"] { left: 64.2%; top: 66.2%; width: 12.2%; height: 27.8%; }
+        .frame[data-frame="11"] { left: 76%; top: 66.2%; width: 24%; height: 27.8%; }
 
         .footnote {
-            padding: 0.42cqw 1cqw;
+            z-index: 2;
+            left: 0;
+            top: 93.6%;
+            width: 100%;
+            height: 6.4%;
+            align-items: center;
+            text-align: center;
+            padding: 0 1.2cqw;
             background: #3a2415;
             color: #f6e6c4;
-            font-size: 1.12cqw;
+            font-size: clamp(8px, 1.7cqh, 14px);
             font-weight: 700;
-            letter-spacing: 0.04em;
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         .typing-cursor::after {
@@ -242,6 +176,10 @@
             .frame,
             #dialog-box,
             #loading-screen { transition: none; }
+            .frame:hover,
+            .frame:focus-visible,
+            .frame:hover.is-selected,
+            .frame:focus-visible.is-selected { transform: none; }
             .typing-cursor::after { animation: none; }
         }
     </style>
@@ -256,74 +194,21 @@
     <div class="stage-container">
         <header class="masthead">
             <h1>撒該與耶利哥：考古與細節統整表</h1>
-            <p>路加福音 19:1-10 耶利哥是通往約旦河東的交通要道，富饒的香脂與沿途貿易使此地繁榮，也造就了稅吏的出現與爭議。</p>
+            <p class="lede">路加福音 19:1-10。耶利哥是通往約旦河東的交通要道，富饒的香脂與沿途貿易使此地繁榮，也造就了稅吏的出現與爭議。</p>
         </header>
-
-        <div class="board-slot">
-        <div class="board">
-            <div class="top-row">
-                <div class="stack">
-                    <div class="frame" data-frame="1" title="1. 第一世紀的耶利哥城">
-                        <img class="media-content" src="assets/Zacchaeus/jericho.png" alt="1. 第一世紀的耶利哥城">
-                    </div>
-                    <div class="frame tax-card" data-frame="2" title="2. 羅馬稅收制度與稅吏">
-                        <div class="tax-inner">
-                            <h2>2. 羅馬稅收制度與稅吏</h2>
-                            <ul>
-                                <li>包稅制度：稅吏先付錢承包稅收權，再向人民收取。</li>
-                                <li>稅吏長：掌管一定區域的稅吏，地位較一般稅吏更高。</li>
-                                <li>社會地位：被猶太人厭惡，與罪人為伍，不被社群接納。</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="frame" data-frame="3" title="3. 無花果桑樹">
-                        <img class="media-content" src="assets/Zacchaeus/fig_tree.png" alt="3. 無花果桑樹">
-                    </div>
-                </div>
-
-                <div class="center-tray">
-                    <div class="frame" data-frame="jesus" title="耶穌">
-                        <img class="media-content" src="assets/Zacchaeus/jesus.png" alt="耶穌">
-                    </div>
-                    <div class="frame" data-frame="zacchaeus" title="撒該">
-                        <img class="media-content" src="assets/Zacchaeus/zacchaeus.png" alt="撒該">
-                    </div>
-                </div>
-
-                <div class="stack">
-                    <div class="frame" data-frame="8" title="8. 服裝與身份象徵">
-                        <img class="media-content" src="assets/Zacchaeus/clothing.png" alt="8. 服裝與身份象徵">
-                    </div>
-                    <div class="frame" data-frame="9" title="9. 當時的道路與交通">
-                        <img class="media-content" src="assets/Zacchaeus/road.png" alt="9. 當時的道路與交通">
-                    </div>
-                    <div class="frame" data-frame="10" title="10. 猶太人對稅吏的看法">
-                        <img class="media-content" src="assets/Zacchaeus/opinions.png" alt="10. 猶太人對稅吏的看法">
-                    </div>
-                </div>
-            </div>
-
-            <div class="bottom-row">
-                <div class="frame" data-frame="4" title="4. 耶利哥香脂">
-                    <img class="media-content" src="assets/Zacchaeus/frankincense.png" alt="4. 耶利哥香脂">
-                </div>
-                <div class="frame" data-frame="5" title="5. 第一世紀貨幣">
-                    <img class="media-content" src="assets/Zacchaeus/currency.png" alt="5. 第一世紀貨幣">
-                </div>
-                <div class="frame" data-frame="6" title="6. 猶太人的待客文化">
-                    <img class="media-content" src="assets/Zacchaeus/receiving_guests.png" alt="6. 猶太人的待客文化">
-                </div>
-                <div class="frame" data-frame="7" title="7. 撒該的家">
-                    <img class="media-content" src="assets/Zacchaeus/zacchaeus_house.png" alt="7. 撒該的家">
-                </div>
-                <div class="frame" data-frame="11" title="11. 相關考古發現">
-                    <img class="media-content" src="assets/Zacchaeus/artifacts.png" alt="11. 相關考古發現">
-                </div>
-            </div>
-        </div>
-        </div>
-
-        <footer class="footnote">核心信息：耶穌來，尋找並拯救失喪的人。祂超越人們的偏見，進入撒該的生命，帶來改變與更新。</footer>
+        <button type="button" class="frame" data-frame="1" title="1. 第一世紀的耶利哥城"><img class="shot" src="assets/Zacchaeus/panels/01-jericho.jpg" alt=""><span class="caption">1. 第一世紀的耶利哥城</span></button>
+        <button type="button" class="frame" data-frame="2" title="2. 羅馬稅收制度與稅吏"><img class="shot" src="assets/Zacchaeus/panels/02-tax.jpg" alt=""><span class="caption">2. 羅馬稅收制度與稅吏</span></button>
+        <button type="button" class="frame" data-frame="3" title="3. 無花果桑樹"><img class="shot" src="assets/Zacchaeus/panels/03-tree.jpg" alt=""><span class="caption">3. 無花果桑樹</span></button>
+        <button type="button" class="frame" data-frame="scene" title="耶穌與撒該"><img class="shot" src="assets/Zacchaeus/panels/scene.jpg" alt=""><span class="caption">耶穌與撒該</span></button>
+        <button type="button" class="frame" data-frame="4" title="4. 耶利哥香脂"><img class="shot" src="assets/Zacchaeus/panels/04-balsam.jpg" alt=""><span class="caption">4. 耶利哥香脂</span></button>
+        <button type="button" class="frame" data-frame="5" title="5. 第一世紀貨幣"><img class="shot" src="assets/Zacchaeus/panels/05-coins.jpg" alt=""><span class="caption">5. 第一世紀貨幣</span></button>
+        <button type="button" class="frame" data-frame="6" title="6. 猶太人的待客文化"><img class="shot" src="assets/Zacchaeus/panels/06-hospitality.jpg" alt=""><span class="caption">6. 猶太人的待客文化</span></button>
+        <button type="button" class="frame" data-frame="7" title="7. 撒該的家"><img class="shot" src="assets/Zacchaeus/panels/07-house.jpg" alt=""><span class="caption">7. 撒該的家</span></button>
+        <button type="button" class="frame" data-frame="8" title="8. 服裝與身份象徵"><img class="shot" src="assets/Zacchaeus/panels/08-clothing.jpg" alt=""><span class="caption">8. 服裝與身份象徵</span></button>
+        <button type="button" class="frame" data-frame="9" title="9. 當時的道路與交通"><img class="shot" src="assets/Zacchaeus/panels/09-road.jpg" alt=""><span class="caption">9. 當時的道路與交通</span></button>
+        <button type="button" class="frame" data-frame="10" title="10. 猶太人對稅吏的看法"><img class="shot" src="assets/Zacchaeus/panels/10-opinions.jpg" alt=""><span class="caption">10. 猶太人對稅吏的看法</span></button>
+        <button type="button" class="frame" data-frame="11" title="11. 相關考古發現"><img class="shot" src="assets/Zacchaeus/panels/11-artifacts.jpg" alt=""><span class="caption">11. 相關考古發現</span></button>
+        <p class="footnote">核心信息：耶穌來，尋找並拯救失喪的人。祂超越人們的偏見，進入撒該的生命，帶來改變與更新。</p>
     </div>
 
     <div id="dialog-box" style="position:fixed;left:0;bottom:0;width:100%;background:#16110c;border-top:2px solid rgba(245,158,11,.8);color:#fffbeb;padding:1rem 1.15rem 1.15rem;box-shadow:0 -10px 35px rgba(0,0,0,.85);transform:translateY(110%);transition:transform .3s ease;z-index:50;">
@@ -354,7 +239,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const images = document.querySelectorAll(".media-content");
+            const images = document.querySelectorAll(".shot");
             const totalResources = images.length;
             let loadedResources = 0;
             const progressText = document.getElementById("loading-progress");
@@ -536,17 +421,16 @@
                     "證實當時貿易繁榮，社會結構與聖經相符。"
                 ]
             },
-            zacchaeus: {
+            scene: {
                 tag: "人物角色",
                 name: "撒該 - 稅吏長時期",
                 text: "我是耶利哥城的稅吏長撒該！你們知道『撒該』這個名字是什麼意思嗎？意思是『純潔』、『清白』！哈哈哈，太好笑了，對吧？在這世道，清白能當飯吃嗎？你看我穿著這身紫紅色的華服，這才是地位和實力！你們要知道，我們現在被羅馬帝國統治，每年得繳一筆固定的稅金。但這稅怎麼收，就是我的本事了！舉個例子，如果羅馬今年只要收一百萬的稅，我就利用職權收他個三百萬！多出來的那兩百萬呢？嘿嘿，當然是全進我的口袋啦！在耶利哥這座商業大城，每天的油水可比『清白』實在多了！",
-                points: []
-            },
-            jesus: {
-                tag: "人物角色",
-                name: "耶穌",
-                text: "撒該，快下來！今天我必住在你家裡。我知道你在這裡等我，我也知道你心中的孤單。今天，救恩要臨到這個家！因為人子來，為的就是要尋找、拯救失喪的人。",
-                points: []
+                points: [],
+                next: {
+                    tag: "人物角色",
+                    name: "耶穌",
+                    text: "撒該，快下來！今天我必住在你家裡。我知道你在這裡等我，我也知道你心中的孤單。今天，救恩要臨到這個家！因為人子來，為的就是要尋找、拯救失喪的人。"
+                }
             }
         };
 
@@ -634,22 +518,7 @@
             const dialog = document.getElementById("dialog-box");
             dialog.classList.toggle("is-open", open);
             dialog.style.transform = open ? "translateY(0)" : "translateY(110%)";
-            syncStageInset();
         }
-
-        function syncStageInset() {
-            const stage = document.querySelector(".stage-container");
-            const dialog = document.getElementById("dialog-box");
-            if (!dialog.classList.contains("is-open")) {
-                stage.style.paddingBottom = "";
-                return;
-            }
-            const overlap = Math.max(0, stage.getBoundingClientRect().bottom - (window.innerHeight - dialog.offsetHeight));
-            stage.style.paddingBottom = overlap ? (overlap + 8) + "px" : "";
-        }
-
-        window.addEventListener("resize", syncStageInset);
-        new ResizeObserver(syncStageInset).observe(document.getElementById("dialog-box"));
 
         function skipTyping() {
             clearInterval(typingInterval);

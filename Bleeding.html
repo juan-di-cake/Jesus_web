@@ -29,8 +29,8 @@
 
         .stage-container {
             position: relative;
-            aspect-ratio: 1.2791;
-            width: min(100%, calc(100vh * 1.2791));
+            aspect-ratio: 1024 / 617;
+            width: min(100%, calc(100vh * 1024 / 617));
             max-height: 100%;
             min-width: 0;
             background: #d7c4a2;
@@ -126,6 +126,44 @@
         .frame[data-frame="9"] { left: 49.8%; top: 73.8%; width: 29%; height: 21%; }
         .frame[data-frame="10"] { left: 78.3%; top: 73.8%; width: 21.7%; height: 21%; }
 
+        .poster {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .hotspot {
+            position: absolute;
+            z-index: 2;
+            border: 3px solid transparent;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .hotspot:hover,
+        .hotspot:focus-visible,
+        .hotspot.is-selected {
+            z-index: 8;
+            border-color: #f5c518;
+            outline: none;
+        }
+
+        .f1  { left: 0.6%; top: 7.6%; width: 23.8%; height: 35.2%; }
+        .f2  { left: 24.4%; top: 7.6%; width: 39.6%; height: 35.2%; }
+        .f3  { left: 64%; top: 7.6%; width: 12%; height: 35.2%; }
+        .f4  { left: 76%; top: 7.6%; width: 23.2%; height: 35.2%; }
+        .f5  { left: 0.6%; top: 42.8%; width: 23.8%; height: 30.2%; }
+        .fseq{ left: 24.4%; top: 42.8%; width: 39.6%; height: 30.2%; }
+        .f6  { left: 64%; top: 42.8%; width: 35.2%; height: 30.2%; }
+        .f7  { left: 0.6%; top: 73%; width: 24%; height: 22.5%; }
+        .f8  { left: 24.6%; top: 73%; width: 37.4%; height: 22.5%; }
+        .f9  { left: 62%; top: 73%; width: 12%; height: 22.5%; }
+        .f10 { left: 74%; top: 73%; width: 25.2%; height: 22.5%; }
+
         .footnote {
             z-index: 6;
             top: 94.6%;
@@ -181,19 +219,18 @@
     </div>
 
     <div class="stage-container">
-        <header class="masthead"><h1>醫治血漏婦人：考古與細節統整表</h1></header>
-        <button type="button" class="frame" data-frame="1" title="1. 血漏婦人"><img class="shot" src="assets/Bleeding/panels/01-woman.jpg" alt=""><span class="caption">1. 血漏婦人</span></button>
-        <button type="button" class="frame" data-frame="2" title="2. 事件場景：加利利城鎮街道"><img class="shot" src="assets/Bleeding/panels/02-street.jpg" alt=""><span class="caption">2. 事件場景：加利利城鎮街道</span></button>
-        <button type="button" class="frame" data-frame="3" title="3. 衣裳繸子的意義"><img class="shot" src="assets/Bleeding/panels/03-tassel.jpg" alt=""><span class="caption">3. 衣裳繸子的意義</span></button>
-        <button type="button" class="frame" data-frame="4" title="4. 第一世紀醫療背景"><img class="shot" src="assets/Bleeding/panels/04-medicine.jpg" alt=""><span class="caption">4. 第一世紀醫療背景</span></button>
-        <button type="button" class="frame" data-frame="5" title="5. 血漏是什麼？"><img class="shot" src="assets/Bleeding/panels/05-illness.jpg" alt=""><span class="caption">5. 血漏是什麼？</span></button>
-        <button type="button" class="frame" data-frame="seq" title="事件發生的經過"><img class="shot" src="assets/Bleeding/panels/seq.jpg" alt=""><span class="caption">事件發生的經過</span></button>
-        <button type="button" class="frame" data-frame="6" title="6. 她為什麼偷偷摸耶穌？"><img class="shot" src="assets/Bleeding/panels/06-secret.jpg" alt=""><span class="caption">6. 她為什麼偷偷摸耶穌？</span></button>
-        <button type="button" class="frame" data-frame="7" title="7. 利未記15章—潔淨律法"><img class="shot" src="assets/Bleeding/panels/07-law.jpg" alt=""><span class="caption">7. 利未記15章—潔淨律法</span></button>
-        <button type="button" class="frame" data-frame="8" title="8. 耶穌帶來的全面恢復"><img class="shot" src="assets/Bleeding/panels/08-restore.jpg" alt=""><span class="caption">8. 耶穌帶來的全面恢復</span></button>
-        <button type="button" class="frame" data-frame="9" title="9. 耶穌稱她「女兒」的意義"><img class="shot" src="assets/Bleeding/panels/09-daughter.jpg" alt=""><span class="caption">9. 耶穌稱她「女兒」的意義</span></button>
-        <button type="button" class="frame" data-frame="10" title="10. 考古背景小知識"><img class="shot" src="assets/Bleeding/panels/10-artifacts.jpg" alt=""><span class="caption">10. 考古背景小知識</span></button>
-        <p class="footnote">核心信息：耶穌不只醫治她的身體，更恢復她的身份、尊嚴與神和人的關係。她的信心，讓她在絕望中得著醫治與新生命。</p>
+        <img class="poster" id="poster" src="assets/Bleeding/poster.jpg" alt="">
+        <button type="button" class="hotspot f1" data-frame="1" title="1. 血漏婦人"></button>
+        <button type="button" class="hotspot f2" data-frame="2" title="2. 事件場景：加利利城鎮街道"></button>
+        <button type="button" class="hotspot f3" data-frame="3" title="3. 衣裳繸子的意義"></button>
+        <button type="button" class="hotspot f4" data-frame="4" title="4. 第一世紀醫療背景"></button>
+        <button type="button" class="hotspot f5" data-frame="5" title="5. 血漏是什麼？"></button>
+        <button type="button" class="hotspot fseq" data-frame="seq" title="事件發生的經過"></button>
+        <button type="button" class="hotspot f6" data-frame="6" title="6. 她為什麼偷偷摸耶穌？"></button>
+        <button type="button" class="hotspot f7" data-frame="7" title="7. 利未記15章—潔淨律法"></button>
+        <button type="button" class="hotspot f8" data-frame="8" title="8. 耶穌帶來的全面恢復"></button>
+        <button type="button" class="hotspot f9" data-frame="9" title="9. 耶穌稱她「女兒」的意義"></button>
+        <button type="button" class="hotspot f10" data-frame="10" title="10. 考古背景小知識"></button>
     </div>
 
     <div id="dialog-box" style="position:fixed;left:0;bottom:0;width:100%;background:#16110c;border-top:2px solid rgba(245,158,11,.8);color:#fffbeb;padding:1rem 1.15rem 1.15rem;box-shadow:0 -10px 35px rgba(0,0,0,.85);transform:translateY(110%);transition:transform .3s ease;z-index:50;">
@@ -224,7 +261,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const images = document.querySelectorAll(".shot");
+            const images = document.querySelectorAll("#poster");
             const totalResources = images.length;
             let loadedResources = 0;
             const progressText = document.getElementById("loading-progress");

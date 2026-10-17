@@ -33,14 +33,80 @@
 
         /* 滿版自適應等比畫布 (嚴格鎖定 16:9) */
         .stage-container {
-            width: min(100%, calc(100vh * 1.3388));
+            width: min(100%, calc(100vh * 1024 / 682));
             max-height: 100%;
-            aspect-ratio: 1.3388;
+            aspect-ratio: 1024 / 682;
             position: relative;
             background: #d7c4a2;
             container-type: size;
             overflow: hidden;
         }
+
+        .poster {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .hotspot {
+            position: absolute;
+            z-index: 2;
+            border: 3px solid transparent;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .hotspot:hover,
+        .hotspot:focus-visible,
+        .hotspot.is-selected {
+            z-index: 8;
+            border-color: #f5c518;
+            outline: none;
+        }
+
+        .hotspot.h1 { left: 1.4%; top: 10.6%; width: 20.7%; height: 23.2%; }
+        .hotspot.h3 { left: 0.6%; top: 34.2%; width: 22.4%; height: 17.8%; }
+        .hotspot.h8 {
+            left: 23.2%;
+            top: 0.6%;
+            width: 49.8%;
+            height: 51.3%;
+            border: none;
+            pointer-events: none;
+        }
+
+        .hotspot.h8 svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .hotspot.h8 polygon {
+            fill: rgba(255, 255, 255, 0.001);
+            stroke: transparent;
+            stroke-width: 3;
+            vector-effect: non-scaling-stroke;
+            pointer-events: all;
+        }
+
+        .hotspot.h8:hover polygon,
+        .hotspot.h8:focus-visible polygon,
+        .hotspot.h8.is-selected polygon {
+            stroke: #f5c518;
+        }
+        .hotspot.h10 { left: 73.9%; top: 2.6%; width: 25.6%; height: 23.9%; }
+        .hotspot.h9 { left: 75%; top: 29.5%; width: 24.1%; height: 31.6%; }
+        .hotspot.h7 { left: 75.3%; top: 61.9%; width: 23.5%; height: 17.4%; }
+        .hotspot.h2 { left: 1.5%; top: 53.8%; width: 30.1%; height: 21.7%; }
+        .hotspot.h4 { left: 1.5%; top: 76.7%; width: 30.3%; height: 22.6%; }
+        .hotspot.h5 { left: 32.5%; top: 53.2%; width: 41.2%; height: 26.5%; }
+        .hotspot.h6 { left: 31.8%; top: 80.5%; width: 67.2%; height: 14.3%; }
 
         .grid-container {
             position: absolute;
@@ -152,57 +218,21 @@
 
     <!-- ================= 核心等比視窗 ================= -->
     <div class="stage-container">
-        <div class="grid-container" id="canvas-wrapper">
-            <!-- 1. 睚魯是誰？ -->
-            <div class="frame frame-1" onclick="handleFrameClick(1)" title="1. 睚魯是誰？">
-                <img class="media-content" src="assets/Daughter/panels/01-jairus.jpg" alt=""><span class="caption">1. 睚魯是誰？</span>
-            </div>
-
-            <!-- 3. 猶太人的喪葬文化 -->
-            <div class="frame frame-2" onclick="handleFrameClick(2)" title="3. 猶太人的喪葬文化">
-                <img class="media-content" src="assets/Daughter/panels/02-funeral.jpg" alt=""><span class="caption">3. 猶太人的喪葬文化</span>
-            </div>
-
-            <!-- 2. 十二歲的女孩 -->
-            <div class="frame frame-3" onclick="handleFrameClick(3)" title="2. 十二歲的女孩">
-                <img class="media-content" src="assets/Daughter/panels/03-girl.jpg" alt=""><span class="caption">2. 十二歲的女孩</span>
-            </div>
-
-            <!-- 4. 耶穌觸摸死人，有何意義？ -->
-            <div class="frame frame-4" onclick="handleFrameClick(4)" title="4. 耶穌觸摸死人，有何意義？">
-                <img class="media-content" src="assets/Daughter/panels/04-touch.jpg" alt=""><span class="caption">4. 耶穌觸摸死人，有何意義？</span>
-            </div>
-
-            <!-- 5. 第一世紀加利利住宅 -->
-            <div class="frame frame-5" onclick="handleFrameClick(5)" title="5. 第一世紀加利利住宅">
-                <img class="media-content" src="assets/Daughter/panels/05-house.jpg" alt=""><span class="caption">5. 第一世紀加利利住宅</span>
-            </div>
-
-            <!-- 9. 房間與家具細節 -->
-            <div class="frame frame-6" onclick="handleFrameClick(6)" title="9. 房間與家具細節">
-                <img class="media-content" src="assets/Daughter/panels/06-furniture.jpg" alt=""><span class="caption">9. 房間與家具細節</span>
-            </div>
-
-            <!-- 8. 舊約律法與背景 -->
-            <div class="frame frame-7" onclick="handleFrameClick(7)" title="8. 舊約律法與背景">
-                <img class="media-content" src="assets/Daughter/panels/07-law.jpg" alt=""><span class="caption">8. 舊約律法與背景</span>
-            </div>
-
-            <!-- 耶穌使女孩復活 (核心神蹟畫面) -->
-            <div class="frame frame-8" onclick="handleFrameClick(8)" title="神蹟主圖：大利大，古米！">
-                <img class="media-content" src="assets/Daughter/panels/08-miracle.jpg" alt=""><span class="caption">神蹟主圖：大利大，古米！</span>
-            </div>
-
-            <!-- 7. 考古發現的相關文物 -->
-            <div class="frame frame-9" onclick="handleFrameClick(9)" title="7. 考古發現的相關文物">
-                <img class="media-content" src="assets/Daughter/panels/09-artifacts.jpg" alt=""><span class="caption">7. 考古發現的相關文物</span>
-            </div>
-
-            <!-- 6. 亞蘭文：「大利大，古米！」 -->
-            <div class="frame frame-10" onclick="handleFrameClick(10)" title="6. 亞蘭文：大利大，古米！">
-                <img class="media-content" src="assets/Daughter/panels/10-aramaic.jpg" alt=""><span class="caption">6. 亞蘭文：大利大，古米！</span>
-            </div>
-        </div>
+        <img class="poster" id="poster" src="assets/Daughter/poster.jpg" alt="">
+        <button type="button" class="hotspot h1" data-frame="1" onclick="handleFrameClick(1)" title="1. 睚魯是誰？"></button>
+        <button type="button" class="hotspot h3" data-frame="3" onclick="handleFrameClick(3)" title="2. 十二歲的女孩"></button>
+        <button type="button" class="hotspot h2" data-frame="2" onclick="handleFrameClick(2)" title="3. 猶太人的喪葬文化"></button>
+        <button type="button" class="hotspot h4" data-frame="4" onclick="handleFrameClick(4)" title="4. 耶穌觸摸死人，有何意義？"></button>
+        <button type="button" class="hotspot h5" data-frame="5" onclick="handleFrameClick(5)" title="5. 第一世紀加利利住宅"></button>
+        <button type="button" class="hotspot h6" data-frame="6" onclick="handleFrameClick(6)" title="9. 房間與家具細節"></button>
+        <button type="button" class="hotspot h7" data-frame="7" onclick="handleFrameClick(7)" title="8. 舊約律法與背景"></button>
+        <button type="button" class="hotspot h8" data-frame="8" onclick="handleFrameClick(8)" title="神蹟主圖：大利大，古米！">
+            <svg viewBox="0 0 510 350" preserveAspectRatio="none" aria-hidden="true">
+                <polygon points="0,70 162,62 212,46 252,24 292,4 462,0 510,4 510,350 0,350"></polygon>
+            </svg>
+        </button>
+        <button type="button" class="hotspot h9" data-frame="9" onclick="handleFrameClick(9)" title="7. 考古發現的相關文物"></button>
+        <button type="button" class="hotspot h10" data-frame="10" onclick="handleFrameClick(10)" title="6. 亞蘭文：大利大，古米！"></button>
     </div>
 
     <!-- ================= 點擊說明彈出框 ================= -->
@@ -239,7 +269,7 @@
     <script>
         // ================= 1. 資源載入監控邏輯 =================
         document.addEventListener("DOMContentLoaded", () => {
-            const images = document.querySelectorAll('.media-content');
+            const images = document.querySelectorAll('#poster');
             const totalResources = images.length;
             let loadedResources = 0;
             const progressText = document.getElementById('loading-progress');
@@ -369,6 +399,9 @@
         let currentFullText = "";
 
         function handleFrameClick(frameNumber) {
+            document.querySelectorAll(".hotspot").forEach((el) => {
+                el.classList.toggle("is-selected", Number(el.dataset.frame) === frameNumber);
+            });
             const data = frameData[frameNumber];
             if (data) {
                 showDialog(data.tag, data.name, data.text, data.points, data.media);
@@ -411,6 +444,7 @@
         }
 
         function closeDialog() {
+            document.querySelectorAll(".hotspot").forEach((el) => el.classList.remove("is-selected"));
             document.getElementById('dialog-box').classList.add('translate-y-full');
             resetMedia();
         }

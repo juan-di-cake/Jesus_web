@@ -29,8 +29,8 @@
 
         .stage {
             position: relative;
-            aspect-ratio: 1.6818;
-            width: min(100%, calc(100vh * 1.6818));
+            aspect-ratio: 1024 / 572;
+            width: min(100%, calc(100vh * 1024 / 572));
             max-height: 100%;
             min-width: 0;
             background: #d7c4a2;
@@ -121,6 +121,44 @@
             pointer-events: none;
         }
 
+        .poster {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .hotspot {
+            position: absolute;
+            z-index: 2;
+            border: 3px solid transparent;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .hotspot:hover,
+        .hotspot:focus-visible,
+        .hotspot.is-selected {
+            z-index: 8;
+            border-color: #f5c518;
+            outline: none;
+        }
+
+        .hotspot.s1 { left: 0.8%; top: 10%; width: 27.5%; height: 29%; }
+        .hotspot.s2 { left: 0.8%; top: 39%; width: 27.5%; height: 27%; }
+        .hotspot.sscene { left: 28.3%; top: 6%; width: 42.7%; height: 60%; }
+        .hotspot.s4 { left: 71%; top: 6%; width: 28%; height: 21%; }
+        .hotspot.s5 { left: 71%; top: 27%; width: 28%; height: 20%; }
+        .hotspot.s6 { left: 71%; top: 47%; width: 28%; height: 19%; }
+        .hotspot.s3 { left: 0.8%; top: 66%; width: 18.5%; height: 26%; }
+        .hotspot.s7 { left: 19.3%; top: 66%; width: 17.5%; height: 26%; }
+        .hotspot.s8 { left: 36.8%; top: 66%; width: 21%; height: 26%; }
+        .hotspot.s9 { left: 57.8%; top: 66%; width: 20%; height: 26%; }
+        .hotspot.s10 { left: 77.8%; top: 66%; width: 21.2%; height: 26%; }
+
         .f1, .f2, .f3 { left: 0; width: 17%; }
         .hero { left: 16.5%; width: 67.1%; }
         .f4, .f5, .f6 { left: 83.2%; width: 16.8%; }
@@ -203,28 +241,18 @@
     </div>
 
     <div class="stage" id="stage">
-        <header class="masthead">
-            <p class="kicker">馬可福音 4:35-41</p>
-            <h1>平靜風和海：考古與細節統整表</h1>
-            <p class="lede">加利利湖是第一世紀重要的漁業與交通樞紐，但其獨特的盆地地形常引發致命的突發暴風，讓世世代生長於此的子民對這片深水充滿敬畏。</p>
-        </header>
-
-        <button class="frame hero" data-frame="scene" title="平靜風和海">
-            <img class="shot" src="assets/sea/panels/storm.jpg" alt="">
-            <span class="caption">平靜風和海｜馬可福音 4:35-41</span>
-        </button>
-        <button class="frame f1" data-frame="1" title="1. 加利利湖：地理與特色"><img class="shot" src="assets/sea/panels/01-map.jpg" alt=""><span class="caption">1. 加利利湖：地理與特色</span></button>
-        <button class="frame f2" data-frame="2" title="2. 為何常有致命暴風？"><img class="shot" src="assets/sea/panels/02-wind.jpg" alt=""><span class="caption">2. 為何常有致命暴風？</span></button>
-        <button class="frame f3" data-frame="3" title="3. 漁業與經濟命脈"><img class="shot" src="assets/sea/panels/03-fishing.jpg" alt=""><span class="caption">3. 漁業與經濟命脈</span></button>
-        <button class="frame f4" data-frame="4" title="4. 角色服裝與打扮"><img class="shot" src="assets/sea/panels/04-clothing.jpg" alt=""><span class="caption">4. 角色服裝與打扮</span></button>
-        <button class="frame f5" data-frame="5" title="5. 舊約背景：只有神能掌管海"><img class="shot" src="assets/sea/panels/05-sea.jpg" alt=""><span class="caption">5. 舊約背景：只有神能掌管海</span></button>
-        <button class="frame f6" data-frame="6" title="6. 耶穌的權柄"><img class="shot" src="assets/sea/panels/06-authority.jpg" alt=""><span class="caption">6. 耶穌的權柄</span></button>
-        <button class="frame f7" data-frame="7" title="7. 船上角色分工與狀態"><img class="shot" src="assets/sea/panels/07-roles.jpg" alt=""><span class="caption">7. 船上角色分工與狀態</span></button>
-        <button class="frame f8" data-frame="8" title="8. 第一世紀加利利漁船"><img class="shot" src="assets/sea/panels/08-boat.jpg" alt=""><span class="caption">8. 第一世紀加利利漁船</span></button>
-        <button class="frame f9" data-frame="9" title="9. 船隻裝備與實物道具"><img class="shot" src="assets/sea/panels/09-gear.jpg" alt=""><span class="caption">9. 船隻裝備與實物道具</span></button>
-        <button class="frame f10" data-frame="10" title="10. 相關考古小知識"><img class="shot" src="assets/sea/panels/10-artifacts.jpg" alt=""><span class="caption">10. 相關考古小知識</span></button>
-
-        <p class="footnote">核心信息：耶穌不只平靜風浪，更掌管我們生命中的風浪。當我們害怕時，祂仍在船上，並且有權柄賜下帶來平安。</p>
+        <img class="poster" id="poster" src="assets/sea/poster.png" alt="">
+        <button type="button" class="hotspot sscene" data-frame="scene" title="平靜風和海"></button>
+        <button type="button" class="hotspot s1" data-frame="1" title="1. 加利利湖：地理與特色"></button>
+        <button type="button" class="hotspot s2" data-frame="2" title="2. 為何常有致命暴風？"></button>
+        <button type="button" class="hotspot s3" data-frame="3" title="3. 漁業與經濟命脈"></button>
+        <button type="button" class="hotspot s4" data-frame="4" title="4. 角色服裝與打扮"></button>
+        <button type="button" class="hotspot s5" data-frame="5" title="5. 舊約背景：只有神能掌管海"></button>
+        <button type="button" class="hotspot s6" data-frame="6" title="6. 耶穌的權柄"></button>
+        <button type="button" class="hotspot s7" data-frame="7" title="7. 船上角色分工與狀態"></button>
+        <button type="button" class="hotspot s8" data-frame="8" title="8. 第一世紀加利利漁船"></button>
+        <button type="button" class="hotspot s9" data-frame="9" title="9. 船隻裝備與實物道具"></button>
+        <button type="button" class="hotspot s10" data-frame="10" title="10. 相關考古小知識"></button>
     </div>
 
     <div id="dialog-box" style="position:fixed;left:0;bottom:0;width:100%;background:#16110c;border-top:2px solid rgba(245,158,11,.8);color:#fffbeb;padding:1rem 1.15rem 1.15rem;box-shadow:0 -10px 35px rgba(0,0,0,.85);z-index:50;">
@@ -331,7 +359,7 @@
             }
         };
 
-        const images = document.querySelectorAll(".shot");
+        const images = document.querySelectorAll("#poster");
         const progressText = document.getElementById("loading-progress");
         const loadingScreen = document.getElementById("loading-screen");
         let loadedResources = 0;
